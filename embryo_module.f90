@@ -8,8 +8,7 @@ real, parameter :: zeta_1 = 3.65375  ! These parameters only work for n=1.5
 real,parameter :: theta_grad = 5.5642e-2
 real, parameter :: n = 1.5  ! Constants for n=1.5 polytropes
 real, parameter :: mu = 2.4 
-real, parameter :: p_kap = 1.0 ! Power law index of opacity law
-real, parameter :: p_grow = (1.0+p_kap)/(2.5+p_kap)
+
 real, parameter :: rho_s = 1.0  ! Density of solids in g cm^-3
 real, parameter :: scrit_min = 10.0 ! Minimum critical size for sedimentation (cm)
 real, parameter :: s0 = 1.0e-4 ! Initial grain size (cm)
@@ -25,7 +24,7 @@ real, parameter :: Tdiss = 3000.0 ! Dissociation Temperature for H2
 
 integer :: nembryo, istart,ifinal,ilog,finishcheck
 
-real :: fg,kappa_0,kappa_star,rho_ad, m1,T1,mfp,dt
+real :: fg,kappa_0,kappa_star,rho_ad, m1,T1,mfp,dt, p_kap, p_grow,cmig
 
 type GE_embryo
 

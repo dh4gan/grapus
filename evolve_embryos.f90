@@ -8,7 +8,6 @@ SUBROUTINE evolve_embryos
   implicit none
 
   integer :: i,j, jwrite,timeup
-  real, parameter :: cmig = 1.0 ! Migration efficiency - low c, slow migration
   real :: M_t, r_hill, tmig,t,l_jeans,factor
   real :: vaptime, hillcore,rchoose,orb,rstrip
 

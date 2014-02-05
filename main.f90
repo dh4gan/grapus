@@ -39,11 +39,16 @@ PROGRAM TD_synthesis
   read(10,*) iseed
   read(10,*) rin
   read(10,*) dr
+  read(10,*) p_kap
+  read(10,*) cmig
 
   close(10)
 
   rin = rin*udist
   dr = dr*udist
+
+  p_grow = (1.0+p_kap)/(2.5+p_kap)
+
   iseed = -abs(iseed)
 
   ! Disc model counter (only used when interpolating from file)

@@ -4,4 +4,6 @@ migrate1_new.dat	Input file for disc models
 -37			Random number seed
 0.1			Inner radius of disc models
 0.01 			Radial spacing of disc models
+1.0			Opacity Powerlaw index
+1.0			Migration parameter (tmig -->tmig/C)
 
