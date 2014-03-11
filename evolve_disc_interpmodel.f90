@@ -26,7 +26,6 @@ SUBROUTINE evolve_disc(t_interp,timeup)
         return
      ENDIF
   ENDDO
-
   
   ! If at beginning of file , mstar equal to initial value
   IF(i==1) THEN
@@ -49,12 +48,14 @@ SUBROUTINE evolve_disc(t_interp,timeup)
      do k=1,nrannuli
 
         rad = r_d(k)
+        rout = rad
+        irout = k
         
         j=1
         DO WHILE(r_mod(i,j) < rad.and. j<nrad_mod)
            j=j+1
         ENDDO
-
+      
         ! If at the beginning spatial index, interpolate against zero
 
         IF(j==1) THEN
@@ -108,7 +109,7 @@ SUBROUTINE evolve_disc(t_interp,timeup)
    !  If the maximum model disc radius is reached, record and exit the routine
 
         IF(j>nrad_mod) THEN
-           !print*, 'Maximum model radius reached'
+           print*, 'Maximum model radius reached'
            DO l=k,nrannuli
               sigma_d(l) = 0.0
               nu_d(l) = 0.0
@@ -148,7 +149,8 @@ SUBROUTINE evolve_disc(t_interp,timeup)
      DO k=1,nrannuli
 
         rad = r_d(k)
-
+        rout = rad
+        irout = k
         j=1
         DO WHILE(r_mod(i,j) < rad .and. j<nrad_mod)
            j=j+1

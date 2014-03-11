@@ -143,13 +143,16 @@ CALL evolve_disc(0.0)
 ! Randomly sample the maximum disc radius between 50 and 100 AU
 ! Disc model ICs extend to 50 AU, assumes planets form outside this
 
-!rmax = rout + 50.0*udist*ran2(iseed)
-rmax = rout
+if(truncate_disc=='y') then
+   rmax = rtrunc*udist + (rtruncmax-rtrunc)*udist*ran2(iseed)
+else
+   rmax = r_d(nrannuli)
+endif
+
+rmax = rmax
 
 ! Find surface density profile at 50 AU for extrapolation out to rmax
 
-sigma_prof = 1.0
-sigma0 = sigma_d(irout-100)*(r_d(irout-100)/udist)**sigma_prof
 
 !print*, 'Disc Model ',imodel
 !print*, 'Mdisc is ', mdisc/umass
@@ -159,7 +162,11 @@ sigma0 = sigma_d(irout-100)*(r_d(irout-100)/udist)**sigma_prof
 !print*, 'Sigma_0 is ',sigma0
 !print*, 'rmax is ',rmax/udist
 
-print*, 'Generating Model ',imodel,Lx, mdisc/umass, mstar/umass, mdisc/mstar,rout/udist
+print*, 'Generating Model ',imodel,Lx, mdisc/umass, mstar/umass, mdisc/mstar,rmax/udist, rout/udist, irout
+
+sigma_prof = 1.0
+sigma0 = sigma_d(irout-100)*(r_d(irout-100)/udist)**sigma_prof
+
 
 ! Calculate other disc variables from interpolated model
 ! and extend disc beyond model limit

@@ -9,9 +9,10 @@ MODULE stardata
 
   integer :: nmodels,ntime_mod,nrad_mod
   integer :: Nstar, istar,ntries,irout,irfrag, iseed, imodel
-  real :: mstar,mdisc,q_disc,dr,rin,rout
+  real :: mstar,mdisc,q_disc,dr,rin,rout, rtrunc, rtruncmax
   real :: mdotvisc,rhomid,rfrag,Lx
   character(100) :: discfile
+  character(1) :: truncate_disc
 
   real,allocatable,dimension(:) :: sigma_d, cs_d, omega_d, gamma_J
   real,allocatable,dimension(:) :: betac_d, mjeans, r_d, H_d,alpha_d
