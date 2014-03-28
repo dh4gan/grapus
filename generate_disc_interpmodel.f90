@@ -9,7 +9,7 @@ implicit none
 
 integer :: i,j,nskips
 real :: mtry, mdot_try,sigma_old,dT,fine
-real :: rmax,sigma0,sigma_prof,Qfrag
+real :: sigma0,sigma_prof,Qfrag
 
 mdisc = 0.0
 i=0

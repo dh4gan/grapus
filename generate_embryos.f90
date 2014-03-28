@@ -60,7 +60,7 @@ SUBROUTINE generate_embryos
      j =j+1
      cspace(j) = 1.5 + ran2(iseed)*1.5
 
-     IF(i==irout) exit
+     IF(r_d(i)>rmax) exit
 
      r_hill = rtest*(mjeans(i)/(3.0*mstar))**0.333
 

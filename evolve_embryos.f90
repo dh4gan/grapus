@@ -411,7 +411,7 @@ ENDDO
 print*, 'Resulting Objects'
 DO j=1,nembryo
 
-  IF(embryo(j)%R > 1.0 .or.embryo(j)%rcore>1.0) THEN   
+  IF(embryo(j)%R > 1.0 .or.embryo(j)%rcore>1.0 .or. embryo(j)%m/mearth >1.0e-3) THEN   
      WRITE(*,'("Embryo ", I2,": ",7I5,4F18.10)') j, embryo(j)%imelt, embryo(j)%ivap,embryo(j)%idiss, &
           embryo(j)%igrown, embryo(j)%iself, embryo(j)%ijeans, embryo(j)%itidal, &
           embryo(j)%M/Mjup, embryo(j)%R/Rjup, embryo(j)%mcore/mearth, embryo(j)%rcore/rearth
