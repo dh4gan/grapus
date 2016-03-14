@@ -6,6 +6,7 @@ Astardiscs_1D.dat	Input file for disc models
 0.01 			Radial spacing of disc models
 1.0			Opacity Powerlaw index
 1.0			Migration parameter (tmig -->tmig/C)
+10.0			Gap Opening Parameter (tgap --> C*tgap)
 n			Truncate disc after fragmentation? (y/n)
 50.0			Truncation Radius
 100.0			Maximum Radius Before Truncation

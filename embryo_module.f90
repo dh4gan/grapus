@@ -24,7 +24,7 @@ real, parameter :: Tdiss = 3000.0 ! Dissociation Temperature for H2
 
 integer :: nembryo, istart,ifinal,ilog,finishcheck
 
-real :: fg,kappa_0,kappa_star,rho_ad, m1,T1,mfp,dt, p_kap, p_grow,cmig
+real :: fg,kappa_0,kappa_star,rho_ad, m1,T1,mfp,dt, p_kap, p_grow,cmig,cgap
 
 type GE_embryo
 

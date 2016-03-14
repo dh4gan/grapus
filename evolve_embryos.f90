@@ -7,9 +7,10 @@ SUBROUTINE evolve_embryos
 
   implicit none
 
-  integer :: i,j, jwrite,timeup
-  real :: M_t, r_hill, tmig,t,l_jeans,factor
+  integer :: i,j, jwrite,timeup, migtype
+  real :: M_t, r_hill, tmig,t,l_jeans,factor,vmig
   real :: vaptime, hillcore,rchoose,orb,rstrip
+  real :: aspectratio, massratio,pressure_crit,tgap,tcross
 
   ! Debug line - picks an embryo to write data to file on
   jwrite = 3
@@ -41,7 +42,6 @@ SUBROUTINE evolve_embryos
 
      ! Check to see if all embryos have finished, and update timestep
 
-
      CALL timestep
 
      !print*, 'dt ',dt/yr
@@ -52,23 +52,51 @@ SUBROUTINE evolve_embryos
 
      !$OMP PARALLEL &
      !$OMP shared(embryo,nembryo,H_d,r_d) &
-     !$OMP shared(t,dt,alpha_d,omega_d,mstar) &
-     !$OMP private(i,j,M_t,orb,tmig,l_jeans,r_hill,hillcore)
+     !$OMP shared(t,dt,alpha_d,omega_d,mstar,cgap) &
+     !$OMP private(i,j,M_t,orb,tmig,l_jeans,r_hill,hillcore) &
+     !$OMP private(pressure_crit,vmig,tcross,tgap,migtype)
      !$OMP DO SCHEDULE(runtime)
      DO j=1,nembryo
 
         i = embryo(j)%icurrent
+        aspectratio = H_d(i)/embryo(j)%a
+        massratio = embryo(j)%m/mstar
 
         ! If embryo finished, skip to the next one
         IF(embryo(j)%finished==1) cycle
 
-        ! Calculate current transition mass at this disc location
+        ! Calculate gap opening criteria
 
-        M_t = 2.0*mstar*(H_d(i)/r_d(i))**3
+        ! First check Crida et al (2006) pressure criterion
 
-        ! Calculate migration timescale (depending on regime)
+         r_hill = embryo(j)%a*(massratio/3.0)**0.333
+         
+         pressure_crit = 0.75*H_d(i)/r_hill + &
+              50.0*alpha_d(i)*cs_d(i)*aspectratio/(massratio*r_d(i)*omega_d(i))
 
-        IF(embryo(j)%m<= M_t)THEN
+         ! Also check if gap opening time less than crossing time
+         ! (assume type II migration timescale)
+          tmig = 1.0/(alpha_d(i)*omega_d(i)*aspectratio*aspectratio)
+          tmig = tmig/cmig
+
+          vmig = r_d(i)/tmig
+
+          tcross = 2.5*r_hill/vmig
+          tgap = cgap*(aspectratio**5)/(omega_d(i)*massratio*massratio)
+
+          ! Assume gap opens before testing - migration type II
+          migtype = 2
+
+          ! Failure to open a gap results in type I migration
+
+          ! If crossing time too short to open gap, no gap opens
+          if(tcross < tgap)  migtype = 1
+          ! If pressure criterion not met, gap doesn't open
+          if(pressure_crit>1.0) migtype = 1
+
+          ! Calculate migration timescale (depending on regime)
+
+        IF(migtype==1)THEN
            ! Type I
            IF(sigma_d(i)/=0.0) THEN
               tmig = H_d(i)*mstar/(omega_d(i)*embryo(j)%m*embryo(j)%a)
@@ -82,7 +110,6 @@ SUBROUTINE evolve_embryos
            ! Type II
            IF(alpha_d(i)*omega_d(i)*H_d(i)/=0.0) THEN
               tmig = embryo(j)%a*embryo(j)%a/(alpha_d(i)*omega_d(i)*H_d(i)*H_d(i))
-              tmig = tmig/cmig
            ELSE
               tmig = 1.0e10*yr
            ENDIF
@@ -113,7 +140,7 @@ SUBROUTINE evolve_embryos
         ! Commented out - useful for future implementations
         ! In general, embryos open "cold gaps" as they are quite massive
 
-        ! r_hill = embryo(j)%a*(embryo(j)%m/(3.0*mstar))**0.333
+!         r_hill = embryo(j)%a*(embryo(j)%m/(3.0*mstar))**0.333
 
         !IF(r_hill <= H_d(i)) THEN
         !   IF(embryo(j)%m/mstar > sqrt(3.0*pi*alpha_d(i)*(H_d(i)/r_d(i))**5)) THEN
@@ -222,9 +249,6 @@ SUBROUTINE evolve_embryos
               ENDIF
 
 
-
-
-
               ! If grains self-gravitate, sedimentation is boosted
               IF(embryo(j)%iself==1) THEN
                  factor = 1.0 - 3.0*(t-embryo(j)%tself)/embryo(j)%t_sed
@@ -277,6 +301,8 @@ SUBROUTINE evolve_embryos
                     embryo(j)%mcore = embryo(j)%fg*embryo(j)%m
                     embryo(j)%rcore = (3.0*embryo(j)%mcore/(4.0*pi*rho_s))**0.333
                     embryo(j)%rg = embryo(j)%rcore
+
+                    ! TODO - evaluate radiative feedback of core formation on envelope
 
                  ELSE
                     embryo(j)%mcore = 0.0

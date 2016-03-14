@@ -41,6 +41,7 @@ PROGRAM TD_synthesis
   read(10,*) dr
   read(10,*) p_kap
   read(10,*) cmig
+  read(10,*) cgap
   read(10,*) truncate_disc
   read(10,*) rtrunc
   read(10,*) rtruncmax

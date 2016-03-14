@@ -10,11 +10,11 @@
 # Compiler variable:
 FC     = gfortran
 
-# For files generated from .... use these flags
-#FFLAGS = -O3 -fPIC -frecord-marker=4 -fconvert=swap
+# For serial runs use these flags
+FFLAGS = -O3 -frecord-marker=4 -fdefault-real-8  -fbounds-check
 
-# For real*8 files generated on mhor use these flags
-FFLAGS = -O3 -frecord-marker=4  -fdefault-real-8  -fbounds-check
+# For OpenMP runs
+FFLAGS = -O3 -frecord-marker=4 -fdefault-real-8  -fbounds-check -fopenmp
 
 # For files generated on stacpolly use these flags
 #FC = ifort
