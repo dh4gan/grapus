@@ -40,9 +40,11 @@ PROGRAM TD_synthesis
   read(10,*) rin
   read(10,*) dr
   read(10,*) p_kap
-  read(10,*) cmig
-  read(10,*) cgap
+  read(10,*) c_mig
+  read(10,*) c_gap
+  read(10,*) c_collapse
   read(10,*) truncate_disc
+  read(10,*) core_feedback
   read(10,*) rtrunc
   read(10,*) rtruncmax
 

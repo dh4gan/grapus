@@ -137,12 +137,15 @@ SUBROUTINE generate_embryos
 
      kappa = kappa_d(i)
 
-     !embryo(j)%t_cool0 = (3.0*G*embryo(j)%m**3*kappa)/(20.0*pi*pi*sigma_SB*embryo(j)%R0**5*embryo(j)%T0**4)
      IF(p_kap==1.0) THEN
         embryo(j)%t_cool0 = 380.0*yr*m1**0.666*T1**(-1.333)*kappa_star**(1.0/9.0)
      ELSE IF(p_kap==2.0) THEN
         embryo(j)%t_cool0 = 5700.0*yr*m1**2*T1**(-2.1111)*kappa_star**(-0.333)
      ENDIF
+
+     ! Multiply by tunable parameter c_collapse
+     embryo(j)%t_cool0 = c_collapse*embryo(j)%t_cool0
+
      mfp = 1.0e10*mfp0*embryo(j)%m/(embryo(j)%R0)**3
 
      ! Calculate critical grain size at which turbulence loses to sedimentation

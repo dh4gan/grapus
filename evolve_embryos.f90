@@ -11,6 +11,7 @@ SUBROUTINE evolve_embryos
   real :: M_t, r_hill, tmig,t,l_jeans,factor,vmig
   real :: vaptime, hillcore,rchoose,orb,rstrip
   real :: aspectratio, massratio,pressure_crit,tgap,tcross
+  real :: core_energy,embryo_energy
 
   ! Debug line - picks an embryo to write data to file on
   jwrite = 3
@@ -52,9 +53,10 @@ SUBROUTINE evolve_embryos
 
      !$OMP PARALLEL &
      !$OMP shared(embryo,nembryo,H_d,r_d) &
-     !$OMP shared(t,dt,alpha_d,omega_d,mstar,cgap) &
+     !$OMP shared(t,dt,alpha_d,omega_d,mstar) &
      !$OMP private(i,j,M_t,orb,tmig,l_jeans,r_hill,hillcore) &
-     !$OMP private(pressure_crit,vmig,tcross,tgap,migtype)
+     !$OMP private(pressure_crit,vmig,tcross,tgap,migtype) &
+     !$OMP private(core_energy,embryo_energy)
      !$OMP DO SCHEDULE(runtime)
      DO j=1,nembryo
 
@@ -77,12 +79,12 @@ SUBROUTINE evolve_embryos
          ! Also check if gap opening time less than crossing time
          ! (assume type II migration timescale)
           tmig = 1.0/(alpha_d(i)*omega_d(i)*aspectratio*aspectratio)
-          tmig = tmig/cmig
+          tmig = c_mig*tmig
 
           vmig = r_d(i)/tmig
 
           tcross = 2.5*r_hill/vmig
-          tgap = cgap*(aspectratio**5)/(omega_d(i)*massratio*massratio)
+          tgap = c_gap*(aspectratio**5)/(omega_d(i)*massratio*massratio)
 
           ! Assume gap opens before testing - migration type II
           migtype = 2
@@ -100,7 +102,6 @@ SUBROUTINE evolve_embryos
            ! Type I
            IF(sigma_d(i)/=0.0) THEN
               tmig = H_d(i)*mstar/(omega_d(i)*embryo(j)%m*embryo(j)%a)
-              tmig = tmig/cmig
            ELSE
               tmig = 1.0e10*yr
            ENDIF
@@ -118,6 +119,8 @@ SUBROUTINE evolve_embryos
            !      omega_d(i),embryo(j)%m/mjup, embryo(j)%a/udist
         ENDIF
 
+        ! Multiply migration timescale by tunable migration parameter
+        tmig = tmig*c_mig
         ! Calculate number of timesteps required to traverse one grid
 
         embryo(j)%Nsteps = ((dr*tmig/embryo(j)%a)-embryo(j)%t_spent)/dt
@@ -302,7 +305,17 @@ SUBROUTINE evolve_embryos
                     embryo(j)%rcore = (3.0*embryo(j)%mcore/(4.0*pi*rho_s))**0.333
                     embryo(j)%rg = embryo(j)%rcore
 
-                    ! TODO - evaluate radiative feedback of core formation on envelope
+                    if(core_feedback=='y') then
+                       ! evaluate radiative feedback of core formation on envelope OpenmP FLAGS!
+                       core_energy = embryo(j)%mcore*embryo(j)%mcore/embryo(j)%rcore
+                       embryo_energy = embryo(j)%m*embryo(j)%m/embryo(j)%r
+
+                       ! If energy released in core formation greater than envelope binding energy, destroy the embryo
+                       if(core_energy>embryo_energy) then
+                          embryo(j)%r =0.0
+                          embryo(j)%M = 0.0                       
+                       endif
+                    endif
 
                  ELSE
                     embryo(j)%mcore = 0.0
