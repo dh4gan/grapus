@@ -67,60 +67,10 @@ SUBROUTINE evolve_embryos
         ! If embryo finished, skip to the next one
         IF(embryo(j)%finished==1) cycle
 
-        ! Calculate gap opening criteria
+        ! Calculate migration timescales and gap opening criteria
 
-        ! First check Crida et al (2006) pressure criterion
+        call migration_timescales(j,migtype,tmig,tgap,tcross)
 
-         r_hill = embryo(j)%a*(massratio/3.0)**0.333
-         
-         pressure_crit = 0.75*H_d(i)/r_hill + &
-              50.0*alpha_d(i)*cs_d(i)*aspectratio/(massratio*r_d(i)*omega_d(i))
-
-         ! Also check if gap opening time less than crossing time
-         ! (assume type II migration timescale)
-          tmig = 1.0/(alpha_d(i)*omega_d(i)*aspectratio*aspectratio)
-          tmig = c_mig*tmig
-
-          vmig = r_d(i)/tmig
-
-          tcross = 2.5*r_hill/vmig
-          tgap = c_gap*(aspectratio**5)/(omega_d(i)*massratio*massratio)
-
-          ! Assume gap opens before testing - migration type II
-          migtype = 2
-
-          ! Failure to open a gap results in type I migration
-
-          ! If crossing time too short to open gap, no gap opens
-          if(tcross < tgap)  migtype = 1
-          ! If pressure criterion not met, gap doesn't open
-          if(pressure_crit>1.0) migtype = 1
-
-          ! Calculate migration timescale (depending on regime)
-
-        IF(migtype==1)THEN
-           ! Type I
-           IF(sigma_d(i)/=0.0) THEN
-              tmig = H_d(i)*mstar/(omega_d(i)*embryo(j)%m*embryo(j)%a)
-           ELSE
-              tmig = 1.0e10*yr
-           ENDIF
-           !  print*, 'Embryo ',j,' undergoes Type I', tmig/yr,sigma_d(i),mstar/umass,H_d(i)/udist,alpha_d(i),&
-           !       omega_d(i), embryo(j)%m/mjup, embryo(j)%a/udist
-        ELSE
-           ! Type II
-           IF(alpha_d(i)*omega_d(i)*H_d(i)/=0.0) THEN
-              tmig = embryo(j)%a*embryo(j)%a/(alpha_d(i)*omega_d(i)*H_d(i)*H_d(i))
-           ELSE
-              tmig = 1.0e10*yr
-           ENDIF
-
-           ! print*, 'Embryo ',j,' undergoes Type II', tmig/yr,sigma_d(i), mstar/umass,H_d(i)/udist,alpha_d(i),&
-           !      omega_d(i),embryo(j)%m/mjup, embryo(j)%a/udist
-        ENDIF
-
-        ! Multiply migration timescale by tunable migration parameter
-        tmig = tmig*c_mig
         ! Calculate number of timesteps required to traverse one grid
 
         embryo(j)%Nsteps = ((dr*tmig/embryo(j)%a)-embryo(j)%t_spent)/dt

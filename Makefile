@@ -36,7 +36,8 @@ loat=nans
 SOURCESAF90 = star_module.f90 embryo_module.f90 eosmodule.f90  main.f90 \
 	 eosread.f90 eos_cs.f90 evolve_disc_interpmodel.f90 evolve_embryos.f90 \
 	generate_disc_interpmodel.f90 generate_embryos.f90 \
-	 generate_star.f90 interpolate_1D.f90 interpolate_2D.f90 timestep.f90
+	 generate_star.f90 interpolate_1D.f90 interpolate_2D.f90 \
+	migration_timescales.f90 timestep.f90
 	 
 
 OBJECTSA    = $(SOURCESAF90:.f90=.o)

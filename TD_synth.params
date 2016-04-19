@@ -1,15 +1,15 @@
-Astar_normalmig		File prefix for outputs
-100000			Number of Stars to simulate
-Astardiscs_1D.dat	Input file for disc models
+test			File prefix for outputs
+1000			Number of Stars to simulate
+migrate1_rout100.dat	Input file for disc models
 -37			Random number seed
 0.1			Inner radius of disc models
 0.01 			Radial spacing of disc models
 1.0			Opacity Powerlaw index
-1.0			Migration parameter (tmig -->C*tmig)
-10.0			Gap Opening Parameter (tgap -->C*tgap)
-10.0			Collapse Timescale Parameter (tcool0 --> C*tcool0
+1.0e-3			Migration parameter (tmig -->C*tmig)
+1.0e3			Gap Opening Parameter (tgap -->C*tgap)
+1.0			Collapse Timescale Parameter (tcool0 --> C*tcool0
 n			Truncate disc after fragmentation? (y/n)
-y			Model Radiative Feedback of Core Formation? (y/n)
+n			Model Radiative Feedback of Core Formation? (y/n)
 50.0			Truncation Radius
 100.0			Maximum Radius Before Truncation
 
