@@ -2,6 +2,7 @@ test			File prefix for outputs
 1000			Number of Stars to simulate
 './'			File path for data
 migrate1_rout100.dat	Input file for disc models
+4000.0			Maximum evolution time for systems
 -37			Random number seed
 0.1			Inner radius of disc models
 0.01 			Radial spacing of disc models

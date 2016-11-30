@@ -10,7 +10,7 @@ MODULE stardata
   integer :: nmodels,ntime_mod,nrad_mod
   integer :: Nstar, istar,ntries,irout,irfrag, iseed, imodel
   real :: mstar,mdisc,q_disc,dr,rin,rout, rtrunc, rtruncmax
-  real :: mdotvisc,rhomid,rfrag,rmax,Lx
+  real :: mdotvisc,rhomid,rfrag,rmax,Lx, tmax
   character(100) :: discfile,datafilepath
   character(1) :: truncate_disc
 

@@ -37,6 +37,7 @@ PROGRAM TD_synthesis
   read(10,*) Nstar 
   read(10,*) datafilepath
   read(10,*) discfile
+  read(10,*) tmax
   read(10,*) iseed
   read(10,*) rin
   read(10,*) dr
