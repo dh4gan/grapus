@@ -8,9 +8,9 @@ SUBROUTINE evolve_embryos
   implicit none
 
   integer :: i,j, jwrite,timeup, migtype
-  real :: M_t, r_hill, tmig,t,l_jeans,factor,vmig
+  real :: M_t, r_hill, t,l_jeans,factor,vmig
   real :: vaptime, hillcore,rchoose,orb,rstrip
-  real :: aspectratio, massratio,pressure_crit,tgap,tcross
+  real :: aspectratio, massratio,pressure_crit
   real :: core_energy,embryo_energy
 
   ! Debug line - picks an embryo to write data to file on
@@ -52,45 +52,35 @@ SUBROUTINE evolve_embryos
      ! If user-imposed time limit reached, exit the loop
      IF(t > tmax*yr) exit
 
-     ! Now begin main embryo loop
+     !*************************************
+     !1. Compute the motion of the embryos
+     !*************************************
+
+     ! Calculate migration timescales and gap opening criteria
+
+     call migration_timescales
+
+     ! Move embryos (either analytically or via N Body integration)
+     call move_embryos
+
+     !*************************************
+     !2. Compute the internal structure of the embryos
+     !*************************************
 
      !$OMP PARALLEL &
      !$OMP shared(embryo,nembryo,H_d,r_d) &
      !$OMP shared(t,dt,alpha_d,omega_d,mstar) &
-     !$OMP private(i,j,M_t,orb,tmig,l_jeans,r_hill,hillcore) &
-     !$OMP private(pressure_crit,vmig,tcross,tgap,migtype) &
-     !$OMP private(core_energy,embryo_energy)
+     !$OMP private(i,j,M_t,orb,l_jeans,r_hill,hillcore) &
+     !$OMP private(core_energy,embryo_energy) 
      !$OMP DO SCHEDULE(runtime)
      DO j=1,nembryo
-
+        
         i = embryo(j)%icurrent
         aspectratio = H_d(i)/embryo(j)%a
         massratio = embryo(j)%m/mstar
 
         ! If embryo finished, skip to the next one
         IF(embryo(j)%finished==1) cycle
-
-        ! Calculate migration timescales and gap opening criteria
-
-        call migration_timescales(j,migtype,tmig,tgap,tcross)
-
-        ! Calculate number of timesteps required to traverse one grid
-
-        embryo(j)%Nsteps = ((dr*tmig/embryo(j)%a)-embryo(j)%t_spent)/dt
-
-        ! Update time spent at this radius
-        embryo(j)%t_spent = embryo(j)%t_spent + dt
-
-        ! If core has spent long enough at this radius, then move it inwards one grid
-
-        IF(embryo(j)%Nsteps<=0) THEN
-           !print*, 'Moving embryo ', j, t/yr, embryo(j)%Nsteps, embryo(j)%t_spent/yr,tmig/yr, dr/embryo(j)%a
-           embryo(j)%a = embryo(j)%a-dr
-           embryo(j)%icurrent = embryo(j)%icurrent-1
-           embryo(j)%t_spent = 0.0
-           IF(embryo(j)%icurrent==1) embryo(j)%finished=1
-
-        ENDIF
 
         ! Decide whether to accrete gas or not (i.e. check for a gap opening)
         ! Commented out - useful for future implementations
@@ -107,10 +97,6 @@ SUBROUTINE evolve_embryos
         !      print*, 'Cold Gap opened for embryo ', j
         !   ENDIF
         !ENDIF
-
-        ! If not yet in tidal disruption regime, then continue as usual
-
-        !IF(embryo(j)%itidal==0) THEN
 
         ! Evolve the radius and temperature
 

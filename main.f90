@@ -47,6 +47,7 @@ PROGRAM TD_synthesis
   read(10,*) c_collapse
   read(10,*) truncate_disc
   read(10,*) core_feedback
+  read(10,*) nbody
   read(10,*) rtrunc
   read(10,*) rtruncmax
 

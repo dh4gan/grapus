@@ -26,7 +26,7 @@ integer :: nembryo, istart,ifinal,ilog,finishcheck
 
 real :: fg,kappa_0,kappa_star,rho_ad, m1,T1,mfp,dt, p_kap, p_grow
 real :: c_mig,c_gap,c_collapse
-character(1) :: core_feedback
+character(1) :: core_feedback,nbody
 
 type GE_embryo
 
@@ -35,7 +35,7 @@ integer :: ivap,imelt,idiss,igrown,iself,ijeans,itidal ! Identifies current stat
 real :: m, a,R,Rg,Rg0, Rcore, mcore,Nsteps ! number of steps left at an orbital radius
 real :: R0, T0, cs0, t_cool0, t_grow0,t_sed0
 real :: T,L, t_cool, cs,rhoc, fg
-real :: t_grow, t_sed, t_mig
+real :: t_grow, t_sed, tmig,tgap,tcross
 real :: t_spent ! Time spent at a particular orbital radius
 real :: tself,rself,scrit
 

@@ -8,13 +8,15 @@ use eosdata
 implicit none
 
 
-integer :: j,migtype
-real :: tcheck, tmig,tgap,tcross
+integer :: j
+real :: tcheck
 
 dt = 1.0e30
 finishcheck=1
 
-!print*, 'Calculating dt '
+! Check migration timescales
+
+call migration_timescales
 
 DO j=1,nembryo  
    ! Use this checksum to see if all embryos finished
@@ -31,10 +33,7 @@ DO j=1,nembryo
       ENDIF
       IF(tcheck < dt) dt = tcheck   
 
-      ! Calculate migration timescales - if too short, then reduce the timestep
-      call migration_timescales(j,migtype, tmig, tgap,tcross)
-
-      if(tmig < dt) dt = tmig
+      if(embryo(j)%tmig < dt) dt = embryo(j)%tmig
    ENDIF
 
 ENDDO

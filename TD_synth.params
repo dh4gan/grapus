@@ -12,6 +12,7 @@ migrate1_rout100.dat	Input file for disc models
 1.0			Collapse Timescale Parameter (tcool0 --> C*tcool0
 n			Truncate disc after fragmentation? (y/n)
 n			Model Radiative Feedback of Core Formation? (y/n)
+n			Switch on N Body engine? (y/n) IN DEV.
 50.0			Truncation Radius
 100.0			Maximum Radius Before Truncation
 
