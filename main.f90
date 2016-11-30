@@ -35,6 +35,7 @@ PROGRAM TD_synthesis
   open(10, file='TD_synth.params', status='unknown')
   read(10,*) prefix
   read(10,*) Nstar 
+  read(10,*) datafilepath
   read(10,*) discfile
   read(10,*) iseed
   read(10,*) rin

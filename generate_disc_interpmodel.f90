@@ -18,6 +18,8 @@ imodel =imodel +1
 
 IF(imodel==1) THEN
 
+discfile = TRIM(datafilepath)//TRIM(discfile)
+
 ! Do pass of first model to check number of time dumps
    OPEN(12,file=discfile,status='unknown')
   ! read(12,*) nmodels,ntime_mod,nrad_mod

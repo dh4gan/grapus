@@ -1,12 +1,13 @@
 test			File prefix for outputs
 1000			Number of Stars to simulate
+'./'			File path for data
 migrate1_rout100.dat	Input file for disc models
 -37			Random number seed
 0.1			Inner radius of disc models
 0.01 			Radial spacing of disc models
 1.0			Opacity Powerlaw index
-1.0e-3			Migration parameter (tmig -->C*tmig)
-1.0e3			Gap Opening Parameter (tgap -->C*tgap)
+1.0			Migration parameter (tmig -->C*tmig)
+1.0			Gap Opening Parameter (tgap -->C*tgap)
 1.0			Collapse Timescale Parameter (tcool0 --> C*tcool0
 n			Truncate disc after fragmentation? (y/n)
 n			Model Radiative Feedback of Core Formation? (y/n)

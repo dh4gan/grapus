@@ -49,6 +49,9 @@ SUBROUTINE evolve_embryos
      ! If all embryos have finished, exit the loop
      IF(finishcheck==1) exit
 
+     ! If time limit reached, exit the loop
+     IF(t > 4000*yr) exit
+
      ! Now begin main embryo loop
 
      !$OMP PARALLEL &

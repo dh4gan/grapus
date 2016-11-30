@@ -14,17 +14,24 @@
 !
 !-----------------------------------------------------------------------
 
+      use stardata, only: datafilepath
       use eosdata
 
       implicit none
       integer :: i,j,k,check
 	real :: cv, gamma
+
+ character(100) :: eosfile
+
+eosfile = TRIM(datafilepath)//"myeos.dat"
+
 ! Open eos data file and read in values
 
- open(50,file="myeos.dat", &
+
+ open(50,file=eosfile, &
            status='old',iostat=check,action='read')
       if (check /= 0) then
-         print*, 'Input file myeos.dat not found'
+         print*, 'Input file ', eosfile, ' not found'
          stop
       endif
       print*, "Reading equation of state tables"
