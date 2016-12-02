@@ -9,9 +9,12 @@ SUBROUTINE evolve_disc(t_interp,timeup)
 
   integer :: i,j,k,l,timeup
 
-  real :: grad1, grad2, inter1,inter2, grad,inter, t_interp, rad
-  real :: sdens1,sdens2,Tmid1,Tmid2, nu_pl1,nu_pl2,tau1,tau2
-  real :: alphamid1, alphamid2,begintime,finishtime
+real :: t_interp, rad
+real :: begintime,finishtime
+
+!  real :: grad1, grad2, inter1,inter2, grad,inter, t_interp, rad
+!  real :: sdens1,sdens2,Tmid1,Tmid2, nu_pl1,nu_pl2,tau1,tau2
+!  real :: alphamid1, alphamid2,begintime,finishtime
 
   mdisc = 0.0
 

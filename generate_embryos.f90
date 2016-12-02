@@ -217,8 +217,8 @@ SUBROUTINE generate_embryos
 ! If this is an N Body run, then create arrays for N body calculation (TODO)
 
 if(nbody=='y') then
-
-    allocate(pos(3,nembryo),vel(3,nembryo),acc(3,nembryo))
+    nbodies = nembryo+1
+    allocate(pos(3,nbodies),vel(3,nbodies),acc(3,nbodies))
 endif
 
 

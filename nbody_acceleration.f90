@@ -1,14 +1,14 @@
-subroutine calc_acceleration(position,velocity,acceleration)
+subroutine nbody_acceleration(position,velocity,acceleration)
 ! Routine drives calculation of all different acceleration terms
 
-use nbodydata,only: N
+use embryodata,only: nbodies
 implicit none
-real,dimension(3,N), intent(in) :: position,velocity
-real,dimension(3,N), intent(out) :: acceleration
+real,dimension(3,nbodies), intent(in) :: position,velocity
+real,dimension(3,nbodies), intent(out) :: acceleration
 
 acceleration(:,:) = 0.0
 
-call calc_grav_acceleration(position,acceleration)
-call calc_drag_terms(position,velocity,acceleration)
+call nbody_grav_acceleration(position,acceleration)
+call nbody_drag_terms(position,velocity,acceleration)
 
-end subroutine calc_acceleration
+end subroutine nbody_acceleration

@@ -6,12 +6,12 @@ use nbodydata
 
 implicit none
 
-real,dimension(3,N),intent(in) :: position,velocity
+real,dimension(3,nbodies),intent(in) :: position,velocity
 
 real :: halfdt,error
-real, dimension(3,N) :: testpos1,testvel1,testpos2,testvel2
+real, dimension(3,nbodies) :: testpos1,testvel1,testpos2,testvel2
 
-halfdt = dt/2
+halfdt = dt_nbody/2
 
 call integrate(halfdt,pos,vel,testpos1,testvel1)
 call integrate(halfdt,testpos1,testvel1,testpos2,testvel2)
@@ -21,7 +21,7 @@ call integrate(halfdt,testpos1,testvel1,testpos2,testvel2)
 error = 0.0
 maxerror = -1.0e30
 
-do ibody=1,N
+do ibody=1,nbodies
 
    error = 0.0
    do ix=1,3
@@ -40,15 +40,12 @@ enddo
 ! If current error above tolerance, then dt is decreased
 
 
-dt = dt*abs(tolerance/maxerror)**0.2
+dt_nbody = dt_nbody*abs(tolerance/maxerror)**0.2
 
 if(maxerror>tolerance) then
    !print*,'error too large'
-   !print*,tolerance,maxerror,dt
-   dt = dt*0.1
+   !print*,tolerance,maxerror,dt_nbody
+   dt_nbody = dt_nbody*0.1
 endif
-
-! Stops timesteps getting too big - ensures at least 10 timesteps per output
-if (dt > tsnap) dt = tsnap/10.0
 
 end subroutine timestep

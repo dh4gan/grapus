@@ -7,8 +7,9 @@ use embryodata, only: fg
 
 implicit none
 
-integer :: i,j,nskips
-real :: mtry, mdot_try,sigma_old,dT,fine
+integer :: i,j
+!integer :: nskips
+!real :: mtry, mdot_try, sigma_old,dT,fine
 real :: sigma0,sigma_prof,Qfrag
 
 mdisc = 0.0

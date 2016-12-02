@@ -7,10 +7,9 @@ SUBROUTINE evolve_embryos
 
   implicit none
 
-  integer :: i,j, jwrite,timeup, migtype
-  real :: M_t, r_hill, t,l_jeans,factor,vmig
+  integer :: i,j, jwrite,timeup
+  real :: M_t, r_hill, t,l_jeans,factor
   real :: vaptime, hillcore,rchoose,orb,rstrip
-  real :: pressure_crit
   real :: core_energy,embryo_energy
 
   ! Debug line - picks an embryo to write data to file on

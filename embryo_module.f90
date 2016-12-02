@@ -22,7 +22,7 @@ real,parameter :: Tmelt = 160.0  ! Melting Temperature of ices
 real, parameter :: Tvap = 1600.0 ! Vapourisation temperature of the grains
 real, parameter :: Tdiss = 3000.0 ! Dissociation Temperature for H2
 
-integer :: nembryo, istart,ifinal,ilog,finishcheck
+integer :: nembryo, nbodies, istart,ifinal,ilog,finishcheck
 
 real :: fg,kappa_0,kappa_star,rho_ad, m1,T1,mfp,dt, p_kap, p_grow
 real :: c_mig,c_gap,c_collapse

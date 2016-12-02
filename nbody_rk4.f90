@@ -12,7 +12,7 @@ withintolerance = .true.
 do while(withintolerance .eqv. .false.)
 
 
-call integrate(dt_nbody,pos,vel,newpos,newvel)
+call nbody_integrate(dt_nbody,pos,vel,newpos,newvel)
 call nbody_timestep(newpos,newvel)
 
 if(maxerror>tolerance) withintolerance=.false.

@@ -8,7 +8,6 @@ PROGRAM TD_synthesis
 
   IMPLICIT NONE
 
-  integer :: l,N_runs,start,k
   character(len=100) :: prefix
 
   INTERFACE
