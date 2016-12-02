@@ -10,7 +10,7 @@ SUBROUTINE evolve_embryos
   integer :: i,j, jwrite,timeup, migtype
   real :: M_t, r_hill, t,l_jeans,factor,vmig
   real :: vaptime, hillcore,rchoose,orb,rstrip
-  real :: aspectratio, massratio,pressure_crit
+  real :: pressure_crit
   real :: core_energy,embryo_energy
 
   ! Debug line - picks an embryo to write data to file on
@@ -41,13 +41,6 @@ SUBROUTINE evolve_embryos
   ! Evolve the disc until it is no longer self-gravitating
   DO WHILE(q_disc > 0.05)
 
-     ! Check to see if all embryos have finished, and update timestep
-
-     CALL timestep
-
-     !print*, 'dt ',dt/yr
-     ! If all embryos have finished, exit the loop
-     IF(finishcheck==1) exit
 
      ! If user-imposed time limit reached, exit the loop
      IF(t > tmax*yr) exit
@@ -76,8 +69,6 @@ SUBROUTINE evolve_embryos
      DO j=1,nembryo
         
         i = embryo(j)%icurrent
-        aspectratio = H_d(i)/embryo(j)%a
-        massratio = embryo(j)%m/mstar
 
         ! If embryo finished, skip to the next one
         IF(embryo(j)%finished==1) cycle
@@ -351,6 +342,16 @@ SUBROUTINE evolve_embryos
   !$OMP END PARALLEL
 
   ! End of embryo loop       
+
+  ! Check to see if all embryos have finished, and update global timestep
+
+  CALL timestep
+
+  !print*, 'dt ',dt/yr
+  ! If all embryos have finished, exit the loop
+  IF(finishcheck==1) exit
+
+
 
   t = t+dt
   !IF(t/yr > 100000)STOP

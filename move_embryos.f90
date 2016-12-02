@@ -13,7 +13,7 @@ integer :: j
 
 if(nbody=='y') then
 
-
+    call nbody_rk4
 else
 
    do j=1,nembryo
@@ -40,3 +40,17 @@ else
 endif
 
 end subroutine move_embryos
+
+
+subroutine get_icurrent(j)
+
+use stardata
+use embryodata
+
+! For N Body runs, finds the grid index of the embryo
+! Allows grid indices outside the model region
+integer,intent(in)::j
+
+embryo(j)%icurrent = int((embryo(j)%rmag-rin)/dr)+1
+
+end subroutine get_icurrent

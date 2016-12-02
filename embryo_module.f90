@@ -25,7 +25,7 @@ real, parameter :: Tdiss = 3000.0 ! Dissociation Temperature for H2
 integer :: nembryo, istart,ifinal,ilog,finishcheck
 
 real :: fg,kappa_0,kappa_star,rho_ad, m1,T1,mfp,dt, p_kap, p_grow
-real :: c_mig,c_gap,c_collapse
+real :: c_mig,c_gap,c_collapse, dt_nbody
 character(1) :: core_feedback,nbody
 
 type GE_embryo
@@ -38,12 +38,24 @@ real :: T,L, t_cool, cs,rhoc, fg
 real :: t_grow, t_sed, tmig,tgap,tcross
 real :: t_spent ! Time spent at a particular orbital radius
 real :: tself,rself,scrit
+! N Body variables
+real,dimension(3) :: pos,vel,acc
+real :: rmag,semimaj,ecc,inc,longascend,argper,trueanom
 
 end type GE_embryo
 
 type(GE_embryo), allocatable :: embryo(:)
 
+contains
 
+subroutine get_magnitude(vector,magnitude)
+
+real,dimension(3),intent(in) :: vector
+real,intent(out):: magnitude
+
+magnitude = sqrt(vector(1)*vector(1)+vector(2)*vector(2)+vector(3)*vector(3))
+
+end subroutine get_magnitude
 
 
 END MODULE embryodata

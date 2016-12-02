@@ -90,6 +90,16 @@ SUBROUTINE generate_embryos
      embryo(j)%a = rtest
      embryo(j)%iform = i
 
+
+    ! If this is an n-body run, then set up positions,velocities
+    embryo(j)%ecc = 0.0
+    embryo(j)%inc = 0.0
+    embryo(j)%longascend = 0.0
+    embryo(j)%argper = 0.0
+    embryo(j)%trueanom = twopi*ran2(iseed)
+
+
+
      exp1 = (1.0-n)/n
      exp2 = (3.0-n)/n
 
@@ -203,5 +213,7 @@ SUBROUTINE generate_embryos
 
   WRITE(ilog,'(5E18.10, I3)') mstar/umass, mdisc/umass, q_disc, rout/udist, rfrag/udist, nembryo
   RETURN
+
+! If this is an N Body run, then create arrays for N body calculation (TODO)
 
 END SUBROUTINE generate_embryos

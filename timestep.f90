@@ -14,9 +14,7 @@ real :: tcheck
 dt = 1.0e30
 finishcheck=1
 
-! Check migration timescales
-
-call migration_timescales
+! Migration timescales and N-Body timestep already accepted
 
 DO j=1,nembryo  
    ! Use this checksum to see if all embryos finished
@@ -34,9 +32,14 @@ DO j=1,nembryo
       IF(tcheck < dt) dt = tcheck   
 
       if(embryo(j)%tmig < dt) dt = embryo(j)%tmig
+
    ENDIF
 
 ENDDO
+
+! TODO - CHECK UNITS OF DT_NBODY VS DT
+! Check against N Body timestep
+if(dt_nbody<dt) dt=dt_nbody
 
 ! Prevent overly long timesteps
 dt = min(dt,100.0*yr)
