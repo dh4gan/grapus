@@ -10,8 +10,9 @@ logical :: withintolerance
 withintolerance = .true.
 
 do while(withintolerance .eqv. .false.)
-call integrate(dt_nbody,pos,vel,newpos,newvel)
 
+
+call integrate(dt_nbody,pos,vel,newpos,newvel)
 call nbody_timestep(newpos,newvel)
 
 if(maxerror>tolerance) withintolerance=.false.
