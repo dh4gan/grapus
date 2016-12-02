@@ -66,8 +66,6 @@ SUBROUTINE evolve_embryos
      !$OMP private(core_energy,embryo_energy) 
      !$OMP DO SCHEDULE(runtime)
      DO j=1,nembryo
-        
-        i = embryo(j)%icurrent
 
         ! If embryo finished, skip to the next one
         IF(embryo(j)%finished==1) cycle

@@ -39,18 +39,22 @@ else
 
 endif
 
+! Find the embryos grid index in the disc model
+call get_icurrent
+
 end subroutine move_embryos
 
 
-subroutine get_icurrent(j)
+subroutine get_icurrent
 
 use stardata
 use embryodata
 
 ! For N Body runs, finds the grid index of the embryo
 ! Allows grid indices outside the model region
-integer,intent(in)::j
 
+do j=1,nembryo
 embryo(j)%icurrent = int((embryo(j)%rmag-rin)/dr)+1
+enddo
 
 end subroutine get_icurrent

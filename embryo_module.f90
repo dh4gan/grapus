@@ -53,7 +53,7 @@ real,parameter :: dampfac = 10.0
 real,parameter :: rsoft = 1.0e-5
 
 real :: system_ang, system_energy, initial_system_ang,initial_system_energy
-real :: dE, dL, dt_nbody
+real :: dE, dL, dt_nbody, totalmass
 
 ! Body data
 

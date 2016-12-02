@@ -155,6 +155,9 @@ do ibody=2,nbodies
 rmag(ibody) = embryo(iembryo)%semimaj * (1.0 - e * e) / (1.0 &
 + e * cos(nu))
 
+! Convert position into code units!
+rmag(ibody) = rmag(ibody)/udist
+
 ! 2. Calculate position vector in orbital plane */
 
 pos(1,ibody) = rmag(ibody)*cos(nu);

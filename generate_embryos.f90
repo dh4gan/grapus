@@ -84,14 +84,18 @@ SUBROUTINE generate_embryos
   i=irfrag
   rtest =rfrag
 
+    totalmass = mstar
+
   DO j=1,nembryo
 
      embryo(j)%m = mjeans(i)
      embryo(j)%a = rtest
      embryo(j)%iform = i
 
+    totalmass = totalmass + embryo(j)%m
 
-    ! If this is an n-body run, then set up positions,velocities
+    ! If this is an n-body run, then set up orbital data here
+    ! TODO - proper eccentricity distribution here!
     embryo(j)%ecc = 0.0
     embryo(j)%inc = 0.0
     embryo(j)%longascend = 0.0
@@ -219,6 +223,9 @@ SUBROUTINE generate_embryos
 if(nbody=='y') then
     nbodies = nembryo+1
     allocate(pos(3,nbodies),vel(3,nbodies),acc(3,nbodies))
+
+    totalmass = totalmass/umass
+    call calc_vector_from_orbit(totalmass)
 endif
 
 

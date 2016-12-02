@@ -37,9 +37,10 @@ DO j=1,nembryo
 
 ENDDO
 
-! TODO - CHECK UNITS OF DT_NBODY VS DT
 ! Check against N Body timestep
-if(dt_nbody<dt) dt=dt_nbody
+! N Body units: 2pi units = 1 yr
+
+if(dt_nbody*yr/twopi<dt) dt=dt_nbody*yr/twopi
 
 ! Prevent overly long timesteps
 dt = min(dt,100.0*yr)
