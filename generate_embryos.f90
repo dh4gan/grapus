@@ -9,7 +9,7 @@ SUBROUTINE generate_embryos
 
 
   integer :: i,j
-  real :: kappa,kappa0,r_hill,rtest,exp1,exp2
+  real :: kappa,r_hill,rtest,exp1,exp2
   real, dimension(100) :: cspace
 
   i=0
@@ -215,5 +215,11 @@ SUBROUTINE generate_embryos
   RETURN
 
 ! If this is an N Body run, then create arrays for N body calculation (TODO)
+
+if(nbody=='y') then
+
+    allocate(pos(3,nembryo),vel(3,nembryo),acc(3,nembryo))
+endif
+
 
 END SUBROUTINE generate_embryos

@@ -25,7 +25,7 @@ real, parameter :: Tdiss = 3000.0 ! Dissociation Temperature for H2
 integer :: nembryo, istart,ifinal,ilog,finishcheck
 
 real :: fg,kappa_0,kappa_star,rho_ad, m1,T1,mfp,dt, p_kap, p_grow
-real :: c_mig,c_gap,c_collapse, dt_nbody
+real :: c_mig,c_gap,c_collapse
 character(1) :: core_feedback,nbody
 
 type GE_embryo
@@ -39,12 +39,32 @@ real :: t_grow, t_sed, tmig,tgap,tcross
 real :: t_spent ! Time spent at a particular orbital radius
 real :: tself,rself,scrit
 ! N Body variables
-real,dimension(3) :: pos,vel,acc
+
 real :: rmag,semimaj,ecc,inc,longascend,argper,trueanom
 
 end type GE_embryo
 
 type(GE_embryo), allocatable :: embryo(:)
+
+! N Body variables
+
+real,parameter :: small = 1.0e-20
+real,parameter :: dampfac = 10.0
+real,parameter :: rsoft = 1.0e-5
+
+real :: system_ang, system_energy, initial_system_ang,initial_system_energy
+real :: dE, dL, dt_nbody
+
+! Body data
+
+real, allocatable, dimension(:,:) :: pos,vel,acc
+real, allocatable,dimension(:,:) :: newpos,newvel
+real,allocatable,dimension(:,:) :: angmom
+
+real,dimension(3) :: system_angmom,rcom,vcom,acom
+real,allocatable,dimension(:) :: mass, ekin,epot,etot,angmag,tmig
+real,allocatable,dimension(:) :: r,semimaj,ecc,inc,longascend,argper,longper,trueanom
+
 
 contains
 

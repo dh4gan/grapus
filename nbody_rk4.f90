@@ -5,32 +5,20 @@ subroutine nbody_rk4
 
 ! Do integration
 
+logical :: withintolerance
+
+withintolerance = .true.
+
+do while(withintolerance .eqv. .false.)
 call integrate(dt_nbody,pos,vel,newpos,newvel)
 
 call nbody_timestep(newpos,newvel)
 
-if(maxerror>tolerance) cycle
+if(maxerror>tolerance) withintolerance=.false.
+
+end do
 
 pos = newpos
 vel = newvel
 
 end subroutine nbody_rk4
-
-! Pour data back into dummy arrays
-
-
-end subroutine nbody_rk4
-
-subroutine setup_nbody_arrays
-
-pos(:,1) = 0.0
-vel(:,1) = 0.0
-acc(:,1) = 0.0
-
-! Thought - is it even worth putting these arrays into GE_embryo?
-pos(:,ibody) = embryo(ibody)%pos(:)
-vel(:,ibody) = embryo(ibody)%vel(:)
-acc(:,ibody) = embryo(ibody)%acc(:)
-
-
-end subroutine setup_nbody_arrays
