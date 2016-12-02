@@ -8,7 +8,7 @@ SUBROUTINE generate_embryos
   implicit none
 
 
-  integer :: i,j
+  integer :: i,j, iembryo,ibody
   real :: kappa,r_hill,rtest,exp1,exp2
   real, dimension(100) :: cspace
 
@@ -218,13 +218,21 @@ SUBROUTINE generate_embryos
   WRITE(ilog,'(5E18.10, I3)') mstar/umass, mdisc/umass, q_disc, rout/udist, rfrag/udist, nembryo
   RETURN
 
-! If this is an N Body run, then create arrays for N body calculation (TODO)
+! If this is an N Body run, then create arrays for N body calculation
 
 if(nbody=='y') then
     nbodies = nembryo+1
-    allocate(pos(3,nbodies),vel(3,nbodies),acc(3,nbodies))
+    allocate(pos(3,nbodies),vel(3,nbodies),acc(3,nbodies), mass(nbodies))
+    allocate(angmom(3,nbodies),ekin(nbodies),epot(nbodies))
 
     totalmass = totalmass/umass
+
+    mass(1) = mstar/umass
+    do ibody=2,nbodies
+    iembryo = ibody-1
+    mass(ibody) = embryo(ibody)%m/umass
+    enddo
+
     call calc_vector_from_orbit(totalmass)
 endif
 

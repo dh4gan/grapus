@@ -388,13 +388,13 @@ print*, 'Resulting Objects'
 DO j=1,nembryo
 
   IF(embryo(j)%R > 1.0 .or.embryo(j)%rcore>1.0 .or. embryo(j)%m/mearth >1.0e-3) THEN   
-     WRITE(*,'("Embryo ", I2,": ",7I5,4F18.10)') j, embryo(j)%imelt, embryo(j)%ivap,embryo(j)%idiss, &
+     WRITE(*,'("Embryo ", I2,": ",8I5,7F18.10)') istar, j, embryo(j)%imelt, embryo(j)%ivap,embryo(j)%idiss, &
           embryo(j)%igrown, embryo(j)%iself, embryo(j)%ijeans, embryo(j)%itidal, &
-          embryo(j)%M/Mjup, embryo(j)%R/Rjup, embryo(j)%mcore/mearth, embryo(j)%rcore/rearth
+          embryo(j)%a/udist, embryo(j)%ecc, embryo(j)%inc, embryo(j)%M/Mjup, embryo(j)%R/Rjup, embryo(j)%mcore/mearth, embryo(j)%rcore/rearth
 
-     WRITE(ifinal,'(7I5,5E18.10)') embryo(j)%imelt, embryo(j)%ivap, embryo(j)%idiss, &
+     WRITE(ifinal,'(8I5,7E18.10)') istar, embryo(j)%imelt, embryo(j)%ivap, embryo(j)%idiss, &
           embryo(j)%igrown, embryo(j)%iself, embryo(j)%ijeans, embryo(j)%itidal,&
-          embryo(j)%a/udist, embryo(j)%m/mjup, embryo(j)%r/rjup, & 
+          embryo(j)%a/udist, embryo(j)%ecc, embryo(j)%inc, embryo(j)%m/mjup, embryo(j)%r/rjup, &
           embryo(j)%rcore/rearth, embryo(j)%mcore/mearth
   ENDIF
 

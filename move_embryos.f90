@@ -8,11 +8,21 @@ use eosdata
 
 implicit none
 
-integer :: j
+integer :: j,ibody,iembryo
 
 
 if(nbody=='y') then
 
+    ! Update the mass arrays for N Body calculation
+    mass(1) = mstar/umass
+
+    do ibody=2,nbodies
+    iembryo = ibody-1
+    mass(ibody) = embryo(ibody)%m/umass
+    enddo
+
+
+    ! Perform the nbody integration to find new positions
     call nbody_rk4
 else
 

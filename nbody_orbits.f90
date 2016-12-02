@@ -40,6 +40,8 @@ embryo(iembryo)%ecc = sqrt(eccvector(1,:)*eccvector(1,:) + eccvector(2,:)*eccvec
 embryo(iembryo)%semimaj = angmag(:)*angmag(:)/&
     (gravparam*(1.0- embryo(iembryo)%ecc*embryo(iembryo)%ecc))
 
+embryo(iembryo)%a = embryo(iembryo)%semimaj*udist
+
 embryo(iembryo)%inc = 0.0
 
 ! Calculate the orbit's angles

@@ -6,6 +6,7 @@ subroutine nbody_rk4
 ! Do integration
 
 logical :: withintolerance
+real :: totalmass
 
 withintolerance = .true.
 
@@ -21,5 +22,8 @@ end do
 
 pos = newpos
 vel = newvel
+
+totalmass = sum(mass)
+call calc_orbit_from_vector(totalmass)
 
 end subroutine nbody_rk4
