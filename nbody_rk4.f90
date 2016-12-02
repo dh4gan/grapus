@@ -5,13 +5,13 @@ subroutine nbody_rk4
 
 ! Do integration
 
+use embryodata
+
 logical :: withintolerance
-real :: totalmass
 
 withintolerance = .true.
 
 do while(withintolerance .eqv. .false.)
-
 
 call nbody_integrate(dt_nbody,pos,vel,newpos,newvel)
 call nbody_timestep(newpos,newvel)
@@ -23,7 +23,6 @@ end do
 pos = newpos
 vel = newvel
 
-totalmass = sum(mass)
-call calc_orbit_from_vector(totalmass)
+call nbody_system_properties
 
 end subroutine nbody_rk4

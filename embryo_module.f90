@@ -22,10 +22,13 @@ real,parameter :: Tmelt = 160.0  ! Melting Temperature of ices
 real, parameter :: Tvap = 1600.0 ! Vapourisation temperature of the grains
 real, parameter :: Tdiss = 3000.0 ! Dissociation Temperature for H2
 
+real, parameter :: tolerance = 1.0e-5
+real, parameter :: G_nbody =1.0
+
 integer :: nembryo, nbodies, istart,ifinal,ilog,finishcheck
 
 real :: fg,kappa_0,kappa_star,rho_ad, m1,T1,mfp,dt, p_kap, p_grow
-real :: c_mig,c_gap,c_collapse
+real :: c_mig,c_gap,c_collapse, maxerror
 character(1) :: core_feedback,nbody
 
 type GE_embryo

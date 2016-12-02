@@ -3,12 +3,15 @@ subroutine nbody_grav_acceleration(position,acceleration)
 ! given input positions
 ! IN THE HELIOCENTRIC FRAME (Keeps star at the centre)
 
+! Calculated in units where G=1, M=msol, r=AU, t=2pi units/year
+
 use embryodata
 implicit none
 
 real, dimension(3,nbodies),intent(in) :: position
 real, dimension(3,nbodies), intent(out) :: acceleration
 
+integer :: ix,ibody, jbody
 real :: relpos,magipos,magjpos
 real, dimension(3) :: sep
 
@@ -24,7 +27,7 @@ do ibody=1,nbodies
                 position(3,ibody)*position(3,ibody))
 
     acceleration(:,ibody) = acceleration(:,ibody) - &
-            G*(mass(1)+mass(ibody))*position(:,ibody)/(magipos*magipos*magipos)
+            (mass(1)+mass(ibody))*position(:,ibody)/(magipos*magipos*magipos)
 
     do jbody=1,nbodies
 
@@ -43,15 +46,13 @@ do ibody=1,nbodies
 
            do ix=1,3
               acceleration(ix,ibody) = acceleration(ix,ibody) - &
-                   G*mass(jbody)*sep(ix)/(relpos*relpos*relpos) - &
-                   G*mass(jbody)*position(ix,jbody)/(magjpos*magjpos*magjpos)
+                   mass(jbody)*sep(ix)/(relpos*relpos*relpos) - &
+                   mass(jbody)*position(ix,jbody)/(magjpos*magjpos*magjpos)
            enddo
 
         enddo
 
 enddo
-
-acceleration(:,:) = acceleration(:,:)*G
 
 return
 end subroutine nbody_grav_acceleration

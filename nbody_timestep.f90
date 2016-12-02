@@ -1,20 +1,21 @@
-subroutine timestep(position,velocity)
+subroutine nbody_timestep(position,velocity)
 ! Adjusts the timestep based on a standard step doubling algorithm
 ! Takes two half timesteps and compares to the current result
 
-use nbodydata
+use embryodata
 
 implicit none
 
 real,dimension(3,nbodies),intent(in) :: position,velocity
 
+integer :: ibody,ix
 real :: halfdt,error
 real, dimension(3,nbodies) :: testpos1,testvel1,testpos2,testvel2
 
 halfdt = dt_nbody/2
 
-call integrate(halfdt,pos,vel,testpos1,testvel1)
-call integrate(halfdt,testpos1,testvel1,testpos2,testvel2)
+call nbody_integrate(halfdt,pos,vel,testpos1,testvel1)
+call nbody_integrate(halfdt,testpos1,testvel1,testpos2,testvel2)
 
 ! Compute error between half timestep and full timestep for each particle
 
@@ -48,4 +49,4 @@ if(maxerror>tolerance) then
    dt_nbody = dt_nbody*0.1
 endif
 
-end subroutine timestep
+end subroutine nbody_timestep

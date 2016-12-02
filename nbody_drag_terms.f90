@@ -8,6 +8,7 @@ subroutine nbody_drag_terms(position,velocity,acceleration)
 use embryodata
 implicit none
 
+integer :: ibody,ix
 real,dimension(3,nbodies),intent(in) :: position,velocity
 real,dimension(3,nbodies),intent(inout) :: acceleration
 real,dimension(nbodies) :: vdotr,rmag
@@ -37,15 +38,14 @@ rmag(:) = position(1,:)*position(1,:) + &
 do ix=1,3
 
 do ibody=2,nbodies
- if (tmig(:)*rmag(:)>small) then
-acceleration(ix,:) = acceleration(ix,:) - 2.0*dampfac*vdotr(:)*position(ix,:)/(rmag(:)*embryo(ibody-1)%tmig)
+ if (embryo(ibody-1)%tmig*rmag(ibody)>small) then
+acceleration(ix,:) = acceleration(ix,:) - 2.0*dampfac*vdotr(:)*position(ix,:)/(rmag(ibody)*embryo(ibody-1)%tmig)
 endif
-endwhere
+enddo
 enddo
 
 ! Inclination damping
 
-where(tmig(:) > small)
 do ibody=2,nbodies
 if(embryo(ibody-1)%tmig>small) then
     acceleration(3,:) = acceleration(3,:) - 2.0*dampfac*vel(3,:)/embryo(ibody-1)%tmig

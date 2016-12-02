@@ -1,18 +1,20 @@
-subroutine calc_orbit_from_vector(totalmass)
+subroutine calc_orbit_from_vector
 ! Calculate the orbital parameters of all the bodies
 ! Also compute energy and angular momentum for error tracking
 
 use embryodata
+use eosdata, only: twopi,udist
 
 implicit none
 
-real :: totalmass, gravparam
+integer :: ibody,iembryo,ix
+real :: gravparam
 real :: rdotV, ndotR,ndotV,edotn,edotR, nmag
 real,dimension(3) :: nplane
 real,dimension(3,nbodies) :: eccvector
 real,dimension(nbodies) :: vdotr,rmag,vmag
 
-gravparam = G*totalmass
+gravparam = totalmass
 
 rmag(:) =sqrt(pos(1,:)*pos(1,:) + pos(2,:)*pos(2,:) + pos(3,:)*pos(3,:))
 vmag(:) = sqrt(vel(1,:)*vel(1,:) + vel(2,:)*vel(2,:) + vel(3,:)*vel(3,:))
@@ -33,11 +35,13 @@ do ix=1,3
    eccvector(ix,:) = (vmag(:)*vmag(:)*pos(ix,:) -vdotr(:)*vel(ix,:))/gravparam - pos(ix,:)/rmag(:)
 enddo
 
-embryo(iembryo)%ecc = sqrt(eccvector(1,:)*eccvector(1,:) + eccvector(2,:)*eccvector(2,:) + eccvector(3,:)*eccvector(3,:))
+embryo(iembryo)%ecc = sqrt(eccvector(1,ibody)*eccvector(1,ibody) + &
+    eccvector(2,ibody)*eccvector(2,ibody) + &
+    eccvector(3,ibody)*eccvector(3,ibody))
 
 
 ! Semimajor axis
-embryo(iembryo)%semimaj = angmag(:)*angmag(:)/&
+embryo(iembryo)%semimaj = angmag(ibody)*angmag(ibody)/&
     (gravparam*(1.0- embryo(iembryo)%ecc*embryo(iembryo)%ecc))
 
 embryo(iembryo)%a = embryo(iembryo)%semimaj*udist
@@ -125,7 +129,7 @@ embryo(iembryo)%inc = 0.0
 
    else
 
-      embryo(iembryo)%argper
+      embryo(iembryo)%argper = 0.0
 
    endif
 
@@ -133,42 +137,53 @@ enddo
 
 end subroutine calc_orbit_from_vector
 
-subroutine calc_vector_from_orbit(totalmass)
+subroutine calc_vector_from_orbit
 ! Calculates body's position and velocity from orbital data
 
 use embryodata
+use eosdata, only: twopi, udist
 
 implicit none
 
-real :: totalmass,gravparam
-real :: a,e,i,long,om,nu
-real,dimension(nbodies) :: rmag,vmag,semilatusrectum
+integer :: ibody,iembryo
+real :: gravparam, semilatusrectum
+!real :: a,e,i,long,om,nu
+real,dimension(nbodies) :: rmag,vmag
+
+real,dimension(nbodies) :: a,e,i,long,om,nu
+
+a(:) = 0.0
+e(:) = 0.0
+i(:) = 0.0
+long(:) = 0.0
+om(:) = 0.0
+nu(:) = 0.0
 
 do ibody=2,nbodies
     iembryo=ibody-1
 
-    a = embryo(iembryo)%semimaj
-    e = embryo(iembryo)%ecc
-    i = embryo(iembryo)%inc
-    long = embryo(iembryo)%longascend
-    om = embryo(iembryo)%argper
-    nu = embryo(iembryo)%trueanom
+    a(ibody) = embryo(iembryo)%semimaj
+    e(ibody) = embryo(iembryo)%ecc
+    i(ibody) = embryo(iembryo)%inc
+    long(ibody) = embryo(iembryo)%longascend
+    om(ibody) = embryo(iembryo)%argper
+    nu(ibody) = embryo(iembryo)%trueanom
 
-rmag(ibody) = embryo(iembryo)%semimaj * (1.0 - e * e) / (1.0 &
-+ e * cos(nu))
+rmag(ibody) = embryo(iembryo)%semimaj * (1.0 - e(ibody) * e(ibody)) / (1.0 &
++ e(ibody) * cos(nu(ibody)))
 
 ! Convert position into code units!
 rmag(ibody) = rmag(ibody)/udist
 
 ! 2. Calculate position vector in orbital plane */
 
-pos(1,ibody) = rmag(ibody)*cos(nu);
-pos(2,ibody) = rmag(ibody) * sin(nu);
+pos(1,ibody) = rmag(ibody)*cos(nu(ibody));
+pos(2,ibody) = rmag(ibody) * sin(nu(ibody));
 pos(3,ibody) = 0.0;
 
 ! 3. Calculate velocity vector in orbital plane */
-semilatusrectum = abs(a * (1.0 - e * e))
-gravparam = G * totalmass
+semilatusrectum = abs(a(ibody) * (1.0 - e(ibody) * e(ibody)))
+gravparam = totalmass
 
 if (semilatusrectum > small) then
 
@@ -180,8 +195,8 @@ vmag(ibody) = 0.0;
 endif
 
 
-vel(1,ibody) = -vmag(ibody) * sin(nu);
-vel(2,ibody) = vmag(ibody) * (cos(nu) + e);
+vel(1,ibody) = -vmag(ibody) * sin(nu(ibody));
+vel(2,ibody) = vmag(ibody) * (cos(nu(ibody)) + e(ibody));
 vel(3,ibody) = 0.0;
 
 ! 4. Begin rotations to correctly align the orbit
@@ -200,6 +215,8 @@ call rotate_X(vel, nbodies, -1 * i);
 
 call rotate_Z(pos,nbodies,-1 * long);
 call rotate_Z(vel,nbodies,-1 * long);
+
+enddo
 
 end subroutine calc_vector_from_orbit
 
