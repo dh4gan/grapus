@@ -91,8 +91,8 @@ enddo
 ! Print out initial conditions
 
 !if (imodel==10) THEN
-   write(75,*) imodel, Lx
-   call flush(75)
+!   write(75,*) imodel, Lx
+!   call flush(75)
 !do i=1,ntime_mod
 !   do j=1,nrad_mod
 

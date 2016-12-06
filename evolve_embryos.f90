@@ -272,6 +272,7 @@ SUBROUTINE evolve_embryos
            ! If no core has formed yet, then strip over a few orbits
 
 
+
            IF(embryo(j)%r> hillcore.and.r_hill < embryo(j)%r) THEN 
               orb = sqrt(G*mstar/embryo(j)%a**3)
               orb = 2.0*pi/orb
@@ -288,7 +289,7 @@ SUBROUTINE evolve_embryos
               ! If a core has formed, then immediately strip layers above hillcore
 
            ENDIF
-
+           
            embryo(j)%M = 4.0*pi*embryo(j)%rhoc*embryo(j)%r**3*theta_grad
 
            ! If the grain radius is larger than the Hill Radius, need to deplete grains as well
@@ -303,7 +304,6 @@ SUBROUTINE evolve_embryos
               embryo(j)%m = embryo(j)%mcore
 
            ENDIF
-
 
         ! IF(t>embryo(j)%t_grow) THEN
         !    print*, j, 'GROWN'
@@ -359,7 +359,7 @@ SUBROUTINE evolve_embryos
   timeup = 0
   CALL evolve_disc(t,dt,timeup)
 
-  call nbody_output ! Debug line - check nbody outputs (TODO)
+  call nbody_output(t) ! Debug line - check nbody outputs (TODO)
 
   IF(timeup==1) exit
 
@@ -383,9 +383,10 @@ ENDDO
 
 ! Output data pertaining to all embryos
 
-print*, 'Resulting Objects'
+print*, 'Resulting ', nembryo, ' Objects:'
 DO j=1,nembryo
-
+   
+  
   IF(embryo(j)%R > 1.0 .or.embryo(j)%rcore>1.0 .or. embryo(j)%m/mearth >1.0e-3) THEN   
      WRITE(*,'("Embryo ", I2,": ",8I5,7F18.10)') istar, j, embryo(j)%imelt, embryo(j)%ivap,embryo(j)%idiss, &
           embryo(j)%igrown, embryo(j)%iself, embryo(j)%ijeans, embryo(j)%itidal, &
