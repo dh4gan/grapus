@@ -8,7 +8,7 @@ use eosdata
 
 implicit none
 
-integer :: j,ibody,iembryo
+integer :: j,ibody
 
 
 if(nbody=='y') then
@@ -17,13 +17,15 @@ if(nbody=='y') then
     mass(1) = mstar/umass
 
     do ibody=2,nbodies
-    iembryo = ibody-1
-    mass(ibody) = embryo(ibody)%m/umass
+    mass(ibody) = embryo(ibody-1)%m/umass
     enddo
-
 
     ! Perform the nbody integration to find new positions
     call nbody_rk4
+
+    ! Find the embryos grid index in the disc model
+    call get_icurrent
+
 else
 
    do j=1,nembryo
@@ -49,8 +51,7 @@ else
 
 endif
 
-! Find the embryos grid index in the disc model
-call get_icurrent
+
 
 end subroutine move_embryos
 
@@ -64,7 +65,10 @@ use embryodata
 ! Allows grid indices outside the model region
 
 do j=1,nembryo
-embryo(j)%icurrent = int((embryo(j)%rmag-rin)/dr)+1
+   embryo(j)%icurrent = int((embryo(j)%rmag-rin)/dr)+1
+
+   ! embryos on the inner boundary are stopped
+   IF(embryo(j)%icurrent<=1) embryo(j)%finished=1
 enddo
 
 end subroutine get_icurrent

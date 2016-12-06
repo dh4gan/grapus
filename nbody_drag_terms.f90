@@ -5,6 +5,8 @@ subroutine nbody_drag_terms(position,velocity,acceleration)
 ! Inclincation damping on timescale tmig/10
 ! (cf Alibert et al 2013)
 
+! Forces not calculated on body 1 (the star)
+
 use embryodata
 implicit none
 

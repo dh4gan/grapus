@@ -25,7 +25,7 @@ real, parameter :: Tdiss = 3000.0 ! Dissociation Temperature for H2
 real, parameter :: tolerance = 1.0e-5
 real, parameter :: G_nbody =1.0
 
-integer :: nembryo, nbodies, istart,ifinal,ilog,finishcheck
+integer :: nembryo, nbodies, istart,ifinal,ilog,inbodylog,finishcheck
 
 real :: fg,kappa_0,kappa_star,rho_ad, m1,T1,mfp,dt, p_kap, p_grow
 real :: c_mig,c_gap,c_collapse, maxerror

@@ -8,7 +8,7 @@ SUBROUTINE generate_embryos
   implicit none
 
 
-  integer :: i,j, iembryo,ibody
+  integer :: i,j,ibody
   real :: kappa,r_hill,rtest,exp1,exp2
   real, dimension(100) :: cspace
 
@@ -44,7 +44,7 @@ SUBROUTINE generate_embryos
      nembryo=0
      return
   ELSE
-     print*, 'Fragmentation radius is ',rfrag/udist, ' AU ',irfrag
+     print*, 'Fragmentation radius is ',rfrag/udist, ' AU: annulus ',irfrag
   ENDIF
 
   ! Generate number of possible embryos
@@ -84,7 +84,7 @@ SUBROUTINE generate_embryos
   i=irfrag
   rtest =rfrag
 
-    totalmass = mstar
+  totalmass = mstar
 
   DO j=1,nembryo
 
@@ -92,7 +92,7 @@ SUBROUTINE generate_embryos
      embryo(j)%a = rtest
      embryo(j)%iform = i
 
-    totalmass = totalmass + embryo(j)%m
+     totalmass = totalmass + embryo(j)%m
 
     ! If this is an n-body run, then set up orbital data here
     ! TODO - proper eccentricity distribution here!
@@ -101,8 +101,6 @@ SUBROUTINE generate_embryos
     embryo(j)%longascend = 0.0
     embryo(j)%argper = 0.0
     embryo(j)%trueanom = twopi*ran2(iseed)
-
-
 
      exp1 = (1.0-n)/n
      exp2 = (3.0-n)/n
@@ -184,10 +182,10 @@ SUBROUTINE generate_embryos
      embryo(j)%t_sed0 = 3.0*embryo(j)%cs0*mfp/(4.0*pi*G*rho_s*embryo(j)%scrit*(embryo(j)%scrit+mfp))
      embryo(j)%t_sed = embryo(j)%t_sed0
 
-! Core mass, radius
+     ! Core mass, radius
 
-	embryo(j)%mcore = 0.0
-	embryo(j)%rcore = 0.0
+     embryo(j)%mcore = 0.0
+     embryo(j)%rcore = 0.0
 	
      ! Now find location of next embryo
 
@@ -215,22 +213,31 @@ SUBROUTINE generate_embryos
 ! Write data referring to this star-disc-planets system to log file
 
 
-  WRITE(ilog,'(5E18.10, I3)') mstar/umass, mdisc/umass, q_disc, rout/udist, rfrag/udist, nembryo
-  RETURN
+  WRITE(ilog,'(I6,5E18.10, I3)') istar, mstar/umass, mdisc/umass, q_disc, rout/udist, rfrag/udist, nembryo
+
 
 ! If this is an N Body run, then create arrays for N body calculation
+! Easier to do the N body calculation in separate arrays (which include star)
+! N Body calculation units: (M=Msol, r=AU, t=1 yr/(2pi))
+
+! Remember iembryo and ibody exclude/include star respectively
+
+print*, ' YAARGH ', nbody
 
 if(nbody=='y') then
-    nbodies = nembryo+1
+    nbodies = nembryo+1 ! Must include the star
+
+    allocate(mass(nbodies))
     allocate(pos(3,nbodies),vel(3,nbodies),acc(3,nbodies), mass(nbodies))
-    allocate(angmom(3,nbodies),ekin(nbodies),epot(nbodies))
+    allocate(angmom(3,nbodies),ekin(nbodies),epot(nbodies),etot(nbodies))
 
     totalmass = totalmass/umass
-
+    dt_nbody = 1.0e-3 ! Set arbitrary small timestep initially
     mass(1) = mstar/umass
+
+    print*, 'MASSES: ', mass
     do ibody=2,nbodies
-    iembryo = ibody-1
-    mass(ibody) = embryo(ibody)%m/umass
+    mass(ibody) = embryo(ibody-1)%m/umass 
     enddo
 
     call calc_vector_from_orbit(totalmass)

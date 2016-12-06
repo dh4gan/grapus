@@ -23,7 +23,7 @@ SUBROUTINE evolve_embryos
      embryo(j)%icurrent = embryo(j)%iform
 
      embryo(j)%R = embryo(j)%R0
-     r_hill = embryo(j)%a*(embryo(j)%m/(3.0*mstar))**0.333
+     !r_hill = embryo(j)%a*(embryo(j)%m/(3.0*mstar))**0.333
 
      embryo(j)%t_spent = 0.0
 
@@ -32,8 +32,6 @@ SUBROUTINE evolve_embryos
      !print*, 'Embryo ', j, ' has Vapourisation timescale is ', vaptime/yr
 
   ENDDO
-
-
 
   t = 0.0     
 
@@ -49,7 +47,6 @@ SUBROUTINE evolve_embryos
      !*************************************
 
      ! Calculate migration timescales and gap opening criteria
-
      call migration_timescales
 
      ! Move embryos (either analytically or via N Body integration)
@@ -363,9 +360,7 @@ SUBROUTINE evolve_embryos
   timeup = 0
   CALL evolve_disc(t,dt,timeup)
 
-
-    ! Debug Lines - Remove these at some point TODO
-    call nbody_output
+  call nbody_output ! Debug line - check nbody outputs (TODO)
 
   IF(timeup==1) exit
 

@@ -15,13 +15,10 @@ integer :: ix,ibody, jbody
 real :: relpos,magipos,magjpos
 real, dimension(3) :: sep
 
-do ibody=1,nbodies
+! Skip body 1 as we fix the star at the origin
+do ibody=2,nbodies
 
-    acceleration(:,ibody)=0.0
-
-    if(ibody==1) cycle  ! Skip forces on the central body
-
-
+    ! Start by computing the force from the star
     magipos = sqrt(position(1,ibody)*position(1,ibody) + &
                 position(2,ibody)*position(2,ibody)+ &
                 position(3,ibody)*position(3,ibody))
@@ -29,10 +26,10 @@ do ibody=1,nbodies
     acceleration(:,ibody) = acceleration(:,ibody) - &
             (mass(1)+mass(ibody))*position(:,ibody)/(magipos*magipos*magipos)
 
-    do jbody=1,nbodies
+    ! Again skip the central star
+    do jbody=2,nbodies
 
        if(ibody==jbody) cycle ! Don't calculate force on itself
-       if(jbody==1) cycle ! Central star force already calculated above
 
         do ix=1,3
             sep(ix) = position(ix,ibody) - position(ix,jbody)
