@@ -341,18 +341,17 @@ SUBROUTINE evolve_embryos
 
   CALL timestep
 
-  !print*, 'dt ',dt/yr
+  print*, 'global timestep dt ',dt/yr
+  print*, 'Finishcheck: ',finishcheck
   ! If all embryos have finished, exit the loop
   IF(finishcheck==1) exit
-
-
 
   t = t+dt
   !IF(t/yr > 100000)STOP
 
   ! Now evolve the disc for this timestep
 
-  !print*, 'Evolving disc ', t/yr, dt/yr,q_disc
+  print*, 'Evolving disc ', t/yr, dt/yr,q_disc
   IF(mstar<mdisc.or.t<dt.or.t/yr>1.0e6) exit 
   ! Evolve the disc
 

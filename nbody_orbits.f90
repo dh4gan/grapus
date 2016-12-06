@@ -25,6 +25,8 @@ do ibody=2,nbodies
 
 iembryo = ibody-1
 
+embryo(iembryo)%rmag = rmag(ibody)*udist
+
 ! Eccentricity first - calculate eccentricity (Laplace-Runge-Lenz) Vector
 vdotr(:) = 0.0
 do ix=1,3
