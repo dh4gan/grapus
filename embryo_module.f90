@@ -66,7 +66,7 @@ real,allocatable,dimension(:,:) :: angmom
 
 real,dimension(3) :: system_angmom,rcom,vcom,acom
 real,allocatable,dimension(:) :: mass, ekin,epot,etot,angmag,tmig
-real,allocatable,dimension(:) :: r,semimaj,ecc,inc,longascend,argper,longper,trueanom
+real,allocatable,dimension(:) :: r
 
 
 contains

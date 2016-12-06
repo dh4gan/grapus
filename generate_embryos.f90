@@ -12,6 +12,15 @@ SUBROUTINE generate_embryos
   real :: kappa,r_hill,rtest,exp1,exp2
   real, dimension(100) :: cspace
 
+
+  ! Debug variables - delete (TODO)
+  integer :: nzeros
+  real :: nfiles
+  character(1) :: zerostring
+  character(100) :: outputfile
+  character(6) :: filenumformat
+  character(10) :: fileno
+
   i=0
 
   DO WHILE(i<nrannuli) 
@@ -239,7 +248,22 @@ if(nbody=='y') then
     mass(ibody) = embryo(ibody-1)%m/umass 
     enddo
 
-    
+    ! Debug lines - open N Body files to check orbits (TODO)
+
+    nfiles = nbodies
+    nzeros = int(log10(nfiles)) +2
+    write(zerostring, '(I1)')nzeros
+    filenumformat = "(I"//TRIM(zerostring)//"."//TRIM(zerostring)//")"
+
+    ! Open output files
+    do ibody=2,nbodies
+       write(fileno, filenumformat) ibody
+
+       outputfile = TRIM(prefix)//"."//TRIM(fileno)
+      
+       open(ibody+inbodylog,file=outputfile, form="formatted")
+    enddo
+
 
     call calc_vector_from_orbit
 

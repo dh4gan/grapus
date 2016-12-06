@@ -12,8 +12,6 @@ PROGRAM TD_synthesis
 
   IMPLICIT NONE
 
-  character(len=100) :: prefix
-
   INTERFACE
 
      SUBROUTINE generate_star

@@ -7,7 +7,7 @@ use eosdata,only: yr,twopi
 
 implicit none
 real, intent(in) :: t
-integer :: ibody
+integer :: ibody,iembryo
 
 102 format (1P,23E15.5)
 103 format (1P, 7E15.5)
@@ -17,10 +17,14 @@ call nbody_system_properties
 
 ! output individual bodies to separate files
 
-   do ibody=1,nbodies
-      write(ibody+inbodylog,102) t/yr, mass(ibody),pos(:,ibody), vel(:,ibody), acc(:,ibody),&
-semimaj(ibody),ecc(ibody),inc(ibody),longascend(ibody),argper(ibody),trueanom(ibody), &
-ekin(ibody),epot(ibody),etot(ibody),angmom(:,ibody)
+   do ibody=2,nbodies
+     iembryo = ibody-1
+
+      write(ibody+inbodylog,102) t/yr, mass(ibody),pos(:,ibody), vel(:,ibody), &
+           acc(:,ibody),embryo(iembryo)%semimaj, embryo(iembryo)%ecc, &
+           embryo(iembryo)%inc, embryo(iembryo)%longascend, &
+           embryo(iembryo)%argper, embryo(iembryo)%trueanom, &
+           ekin(ibody),epot(ibody), etot(ibody),angmom(:,ibody)
       call flush(ibody)
    enddo
 
