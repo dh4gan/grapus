@@ -101,7 +101,7 @@ PROGRAM TD_synthesis
      ! Subroutine outputs final M,R,a to file
      IF(nembryo>0) CALL evolve_embryos
 
-     if(nembryo>0 .and. istar>1) STOP ! Debug line for N Body runs
+     STOP ! Debug line for N Body runs
   ENDDO
 
   close(istart)

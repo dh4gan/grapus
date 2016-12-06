@@ -9,19 +9,28 @@ use embryodata
 
 logical :: withintolerance
 
-withintolerance = .true.
+withintolerance = .false.
+print*, 'Attempting integration RK4'
 
 do while(withintolerance .eqv. .false.)
+
+newpos(:,:) = 0.0
+newvel(:,:) = 0.0
 
 call nbody_integrate(dt_nbody,pos,vel,newpos,newvel)
 call nbody_timestep(newpos,newvel)
 
-if(maxerror>tolerance) withintolerance=.false.
+if(maxerror<tolerance) withintolerance=.true.
 
 end do
 
 pos = newpos
 vel = newvel
+print*, 'New positions:'
+
+print*, pos
+
+print*, 'New timestep: ',dt_nbody
 
 call nbody_system_properties
 

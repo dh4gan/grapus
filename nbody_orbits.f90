@@ -162,18 +162,18 @@ nu(:) = 0.0
 do ibody=2,nbodies
     iembryo=ibody-1
 
-    a(ibody) = embryo(iembryo)%semimaj
+    a(ibody) = embryo(iembryo)%semimaj ! semimaj is in AU
     e(ibody) = embryo(iembryo)%ecc
     i(ibody) = embryo(iembryo)%inc
     long(ibody) = embryo(iembryo)%longascend
     om(ibody) = embryo(iembryo)%argper
     nu(ibody) = embryo(iembryo)%trueanom
 
-rmag(ibody) = embryo(iembryo)%semimaj * (1.0 - e(ibody) * e(ibody)) / (1.0 &
+    print*, a(ibody), e(ibody), i(ibody), nu(ibody)
+    rmag(ibody) = embryo(iembryo)%semimaj * (1.0 - e(ibody) * e(ibody)) / (1.0 &
 + e(ibody) * cos(nu(ibody)))
 
-! Convert position into code units!
-rmag(ibody) = rmag(ibody)/udist
+
 
 ! 2. Calculate position vector in orbital plane */
 

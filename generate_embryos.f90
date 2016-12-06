@@ -90,6 +90,7 @@ SUBROUTINE generate_embryos
 
      embryo(j)%m = mjeans(i)
      embryo(j)%a = rtest
+     embryo(j)%semimaj = embryo(j)%a/udist
      embryo(j)%iform = i
 
      totalmass = totalmass + embryo(j)%m
@@ -222,25 +223,26 @@ SUBROUTINE generate_embryos
 
 ! Remember iembryo and ibody exclude/include star respectively
 
-print*, ' YAARGH ', nbody
-
 if(nbody=='y') then
     nbodies = nembryo+1 ! Must include the star
 
-    allocate(mass(nbodies))
     allocate(pos(3,nbodies),vel(3,nbodies),acc(3,nbodies), mass(nbodies))
-    allocate(angmom(3,nbodies),ekin(nbodies),epot(nbodies),etot(nbodies))
+    allocate(angmom(3,nbodies),angmag(nbodies))
+    allocate(ekin(nbodies),epot(nbodies),etot(nbodies))
+    allocate(newpos(3,nbodies),newvel(3,nbodies))
 
     totalmass = totalmass/umass
     dt_nbody = 1.0e-3 ! Set arbitrary small timestep initially
     mass(1) = mstar/umass
 
-    print*, 'MASSES: ', mass
     do ibody=2,nbodies
     mass(ibody) = embryo(ibody-1)%m/umass 
     enddo
 
-    call calc_vector_from_orbit(totalmass)
+    
+
+    call calc_vector_from_orbit
+
 endif
 
 

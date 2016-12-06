@@ -401,4 +401,6 @@ DO j=1,nembryo
 
 ENDDO
 
+if(nbody=='y') call nbody_deallocate_arrays
+
 END SUBROUTINE evolve_embryos

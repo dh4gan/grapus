@@ -14,6 +14,7 @@ real,dimension(3,nbodies) :: k1pos, k2pos, k3pos, k4pos
 
 ! Begin calculating k-coefficients (for velocity and position)
 
+
 ! First k-coeff for velocity = acceleration
 call nbody_acceleration(position,velocity,k1vel)
 

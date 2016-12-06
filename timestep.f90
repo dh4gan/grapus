@@ -45,5 +45,5 @@ if(dt_nbody*yr/twopi<dt) dt=dt_nbody*yr/twopi
 ! Prevent overly long timesteps
 dt = min(dt,100.0*yr)
 
-!print*, 'dt ', dt
+print*, 'global timestep: dt ', dt
 END SUBROUTINE timestep
