@@ -9,7 +9,7 @@ implicit none
 real, intent(in) :: t
 integer :: ibody,iembryo
 
-102 format (1P,23E15.5)
+102 format (1P,24E15.5)
 103 format (1P, 7E15.5)
 
 call nbody_acceleration(pos,vel,acc)

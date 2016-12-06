@@ -79,7 +79,7 @@ SUBROUTINE generate_embryos
 
      rtest = r_d(i)
      nembryo = nembryo+1
-     if (nembryo==1) exit ! Debug line - remove (TODO)
+     !if (nembryo==1) exit ! Debug line - remove (TODO)
   ENDDO
 
   print*, 'There are ',nembryo, ' embryos'

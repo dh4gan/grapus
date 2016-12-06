@@ -37,10 +37,13 @@ DO j=1,nembryo
 
 ENDDO
 
-! Check against N Body timestep
-! N Body units: 2pi units = 1 yr
 
-if(dt_nbody*yr/twopi<dt) dt=dt_nbody*yr/twopi
+if(nbody=='y') then
+   ! Check against N Body timestep
+   ! N Body units: 2pi units = 1 yr
+
+   if(dt_nbody*yr/twopi<dt) dt=dt_nbody*yr/twopi
+endif
 
 ! Prevent overly long timesteps
 dt = min(dt,100.0*yr)

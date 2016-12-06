@@ -39,7 +39,7 @@ else
    ! If core has spent long enough at this radius, then move it inwards one grid
 
    IF(embryo(j)%Nsteps<=0) THEN
-      !print*, 'Moving embryo ', j, t/yr, embryo(j)%Nsteps, embryo(j)%t_spent/yr,tmig/yr, dr/embryo(j)%a
+      !print*, 'Moving embryo ', j, t/yr, embryo(j)%Nsteps, embryo(j)%t_spent/yr,embryo(j)%tmig/yr, dr/embryo(j)%a
       embryo(j)%a = embryo(j)%a-dr
       embryo(j)%icurrent = embryo(j)%icurrent-1
       embryo(j)%t_spent = 0.0
