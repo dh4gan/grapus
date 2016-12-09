@@ -13,13 +13,13 @@ SUBROUTINE generate_embryos
   real, dimension(100) :: cspace
 
 
-  ! Debug variables - delete (TODO)
+  ! Debug variables - for nbody output files
   integer :: nzeros
   real :: nfiles
   character(1) :: zerostring
   character(100) :: outputfile
   character(6) :: filenumformat
-  character(10) :: fileno
+  character(10) :: fileno,runno
 
   i=0
 
@@ -258,13 +258,17 @@ if(nbody=='y') then
 
     ! Open output files
     do ibody=2,nbodies
+       write(runno, filenumformat) istar
        write(fileno, filenumformat) ibody
 
-       outputfile = TRIM(prefix)//"."//TRIM(fileno)
+       outputfile = TRIM(prefix)//TRIM(runno)//"."//TRIM(fileno)
       
        open(ibody+inbodylog,file=outputfile, form="formatted")
     enddo
 
+    outputfile = TRIM(prefix)//TRIM(runno)//".log"
+
+    open(inbodylog,file=outputfile,form="formatted")
 
     call calc_vector_from_orbit
 

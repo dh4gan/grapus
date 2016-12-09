@@ -14,6 +14,8 @@ real :: vmig, aspectratio,massratio, r_hill, pressure_crit
 
 do j=1,nembryo
 
+   if(embryo(j)%finished==1) cycle
+
    ! Find embryo in disc
 
    i = embryo(j)%icurrent

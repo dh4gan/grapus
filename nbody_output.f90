@@ -24,7 +24,8 @@ call nbody_system_properties
            acc(:,ibody),embryo(iembryo)%semimaj, embryo(iembryo)%ecc, &
            embryo(iembryo)%inc, embryo(iembryo)%longascend, &
            embryo(iembryo)%argper, embryo(iembryo)%trueanom, &
-           ekin(ibody),epot(ibody), etot(ibody),angmom(:,ibody)
+           ekin(ibody),epot(ibody), etot(ibody),angmom(:,ibody), &
+           embryo(iembryo)%tmig
       call flush(ibody)
    enddo
 
