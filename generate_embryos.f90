@@ -212,11 +212,11 @@ SUBROUTINE generate_embryos
      !     print*, embryo(j)%m/umass, embryo(j)%a/udist,embryo(j)%R0/udist, embryo(j)%cs0, &
      !          embryo(j)%T0,embryo(j)%t_cool0/yr, embryo(j)%t_grow0/yr, embryo(j)%t_sed0/yr
 
-     write(istart,'(8E18.10)') embryo(j)%a/udist, embryo(j)%m/mjup, embryo(j)%R0/rjup, & 
+     write(istart,'(1P,8E18.10)') embryo(j)%a/udist, embryo(j)%m/mjup, embryo(j)%R0/rjup, & 
           embryo(j)%T0, embryo(j)%scrit, embryo(j)%t_cool0/yr, embryo(j)%t_grow/yr, embryo(j)%t_sed0/yr
 
      r_hill = embryo(j)%a*(embryo(j)%m/(3.0*mstar))**0.333
-     WRITE(*, '(I2,1X,I4,6F18.10)') j, embryo(j)%iform, embryo(j)%m/mjup, embryo(j)%a/udist, embryo(j)%R/rjup,&
+     WRITE(*, '(I2,1X,I4,1P,6E18.4)') j, embryo(j)%iform, embryo(j)%m/mjup, embryo(j)%a/udist, embryo(j)%R/rjup,&
           embryo(j)%t_cool0/yr, embryo(j)%t_grow/yr, embryo(j)%t_sed0/yr
 
   ENDDO
@@ -241,6 +241,19 @@ if(nbody=='y') then
     allocate(ekin(nbodies),epot(nbodies),etot(nbodies))
     allocate(newpos(3,nbodies),newvel(3,nbodies))
 
+    pos(:,:) = 0.0
+    vel(:,:) = 0.0
+    acc(:,:) = 0.0
+
+    angmom(:,:) = 0.0
+    angmag(:) = 0.0
+    ekin(:) = 0.0
+    epot(:) = 0.0
+    etot(:) = 0.0
+
+    newpos(:,:) = 0.0
+    newvel(:,:) = 0.0
+
     totalmass = totalmass/umass
     dt_nbody = 1.0e-3 ! Set arbitrary small timestep initially
     mass(1) = mstar/umass
@@ -249,8 +262,17 @@ if(nbody=='y') then
     mass(ibody) = embryo(ibody-1)%m/umass 
     enddo
 
-    ! Debug lines - open N Body files to check orbits (TODO)
+    ! Debug lines - open N Body files to check orbits
 
+    ! First set up character for run ID
+    nfiles = Nstar
+    nzeros = int(log10(nfiles))+2
+    write(zerostring, '(I1)')nzeros
+    filenumformat = "(I"//TRIM(zerostring)//"."//TRIM(zerostring)//")"
+
+    write(runno,filenumformat) istar
+
+    ! Now character for embryo IDs
     nfiles = nbodies
     nzeros = int(log10(nfiles)) +2
     write(zerostring, '(I1)')nzeros
@@ -258,7 +280,7 @@ if(nbody=='y') then
 
     ! Open output files
     do ibody=2,nbodies
-       write(runno, filenumformat) istar
+      
        write(fileno, filenumformat) ibody
 
        outputfile = TRIM(prefix)//TRIM(runno)//"."//TRIM(fileno)
@@ -266,6 +288,7 @@ if(nbody=='y') then
        open(ibody+inbodylog,file=outputfile, form="formatted")
     enddo
 
+    ! Now set up log file
     outputfile = TRIM(prefix)//TRIM(runno)//".log"
 
     open(inbodylog,file=outputfile,form="formatted")

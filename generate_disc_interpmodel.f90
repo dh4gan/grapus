@@ -165,7 +165,7 @@ rmax = rmax
 !print*, 'Sigma_0 is ',sigma0
 !print*, 'rmax is ',rmax/udist
 
-print*, 'Generating Model ',imodel,Lx, mdisc/umass, mstar/umass, mdisc/mstar,rmax/udist, rout/udist, irout
+write(*,'(A,I6,X,1P,6e18.4,I6)') 'Generating Model ',imodel,Lx, mdisc/umass, mstar/umass, mdisc/mstar,rmax/udist, rout/udist, irout
 
 sigma_prof = 1.0
 sigma0 = sigma_d(irout-100)*(r_d(irout-100)/udist)**sigma_prof

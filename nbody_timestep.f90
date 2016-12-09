@@ -2,6 +2,8 @@ subroutine nbody_timestep(position,velocity)
 ! Adjusts the timestep based on a standard step doubling algorithm
 ! Takes two half timesteps and compares to the current result
 
+use stardata, only : istar ! Debug line (TODO-delete)
+use eosdata, only : twopi ! Debug line also
 use embryodata
 
 implicit none
@@ -22,6 +24,7 @@ call nbody_integrate(halfdt,testpos1,testvel1,testpos2,testvel2)
 error = 0.0
 maxerror = -1.0e30
 
+if(istar==3) print*, 'HALF TIMESTEP', halfdt
 do ibody=1,nbodies
 
    error = 0.0
@@ -29,6 +32,9 @@ do ibody=1,nbodies
 
       error = error + (position(ix,ibody)-testpos2(ix,ibody))*(position(ix,ibody)-testpos2(ix,ibody))
       error = error + (velocity(ix,ibody)-testvel2(ix,ibody))*(velocity(ix,ibody)-testvel2(ix,ibody))
+
+      if(istar==3) print*,ibody, ix, error, position(ix,ibody),&
+           testpos1(ix,ibody),testpos2(ix,ibody)
    enddo
 
    error = sqrt(error)
@@ -40,8 +46,18 @@ enddo
 ! If current error below user defined tolerance, then dt is increased
 ! If current error above tolerance, then dt is decreased
 
+if(istar==3) then
+   print*, 'TIMESTEP CHECK: dt, tol, maxerr: ',dt_nbody,tolerance,maxerror
+  ! print*, position
+  !print*, velocity
+ !  print*, acc
+endif
 
-dt_nbody = dt_nbody*abs(tolerance/maxerror)**0.2
+if(maxerror>small) then
+   dt_nbody = dt_nbody*abs(tolerance/maxerror)**0.2
+endif
+
+if(istar==3) print*, 'NEW TIMESTEP: ',dt_nbody/twopi
 
 if(maxerror>tolerance) then
    !print*,'error too large'

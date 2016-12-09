@@ -1,6 +1,7 @@
 subroutine nbody_integrate(deltat, position,velocity,newposition,newvelocity)
 ! This subroutine drives the RK4 integration
 
+use stardata, only: istar
 use embryodata
 implicit none
 
@@ -25,6 +26,7 @@ k1pos(:,:) = velocity(:,:)
 nextpos = position(:,:) + 0.5*deltat*k1pos(:,:)
 nextvel = velocity(:,:) + 0.5*deltat*k1vel(:,:)
 
+if(istar==3) print*, 'NEXT k2', nextpos(:,2), nextvel(:,2), k1vel(:,2)
 call nbody_acceleration(nextpos,nextvel,k2vel)
 
 ! Second k-coeff for position = vvelocity + 0.5*k1vel
@@ -49,5 +51,12 @@ k4pos(:,:) = velocity(:,:) + deltat*k3vel(:,:)
 ! New position and velocity
 newposition(:,:) = position(:,:) + (deltat/6.0)*(k1pos(:,:) + 2.0*k2pos(:,:) + 2.0*k3pos(:,:) + k4pos(:,:))
 newvelocity(:,:) = velocity(:,:) + (deltat/6.0)*(k1vel(:,:) + 2.0*k2vel(:,:) + 2.0*k3vel(:,:) + k4vel(:,:))
+
+if(istar==3) then
+   print*, k1pos(:,2), k1vel(:,2)
+   print*, k2pos(:,2), k2vel(:,2)
+   print*, k3pos(:,2), k3vel(:,2)
+   print*, k4pos(:,2), k4vel(:,2)
+endif
 
 end subroutine nbody_integrate

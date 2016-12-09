@@ -48,4 +48,6 @@ endif
 ! Prevent overly long timesteps
 dt = min(dt,100.0*yr)
 
+if(istar==3) print*, 'Global timestep: ',dt/yr
+
 END SUBROUTINE timestep

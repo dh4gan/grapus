@@ -43,10 +43,6 @@ SUBROUTINE evolve_embryos
   ! Evolve the disc until it is no longer self-gravitating
   DO WHILE(q_disc > 0.05)
 
-
-     ! If user-imposed time limit reached, exit the loop
-     IF(t > tmax*yr) exit
-
      !*************************************
      !1. Compute the motion of the embryos
      !*************************************
@@ -357,7 +353,7 @@ SUBROUTINE evolve_embryos
   ! Now evolve the disc for this timestep
 
  
-  IF(mstar<mdisc.or.t<dt.or.t/yr>1.0e6) exit 
+  IF(mstar<mdisc.or.t<dt.or.t/yr>tmax) exit 
   ! Evolve the disc
 
   ! Check for the end of the disc simulation using timeup
@@ -365,7 +361,7 @@ SUBROUTINE evolve_embryos
   CALL evolve_disc(t,dt,timeup)
 
   tdump = tdump + dt
-  if(tdump>tsnap) then
+  if(tdump>tsnap .or. istar==3) then
       write(*,'(A,1P,3e18.4)'), 't, dt, mdisc/mstar: ', t/yr, dt/yr,q_disc
 !     write(*,'(A,1P,1e18.4,A)') 't=',t/yr, ' years'
      tdump = 0.0
@@ -400,7 +396,7 @@ DO j=1,nembryo
    
   
   IF(embryo(j)%R > 1.0 .or.embryo(j)%rcore>1.0 .or. embryo(j)%m/mearth >1.0e-3) THEN   
-     WRITE(*,'("Embryo ", I2,": ",8I5,7F18.10)') istar, j, embryo(j)%imelt, embryo(j)%ivap,embryo(j)%idiss, &
+     WRITE(*,'("Run ",I5, ", Embryo ", I2,": ",7I5,7F12.4)') istar, j, embryo(j)%imelt, embryo(j)%ivap,embryo(j)%idiss, &
           embryo(j)%igrown, embryo(j)%iself, embryo(j)%ijeans, embryo(j)%itidal, &
           embryo(j)%a/udist, embryo(j)%ecc, embryo(j)%inc, embryo(j)%M/Mjup, embryo(j)%R/Rjup, &
         embryo(j)%mcore/mearth, embryo(j)%rcore/rearth
