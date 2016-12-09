@@ -70,8 +70,6 @@ do j=1,nembryo
    ! embryos on the inner boundary are stopped
    IF(embryo(j)%icurrent<=1) embryo(j)%finished=1
 
-   print*, 'j, icurrent, ifinished', j,embryo(j)%icurrent, embryo(j)%finished
-   print*, 'rmag, rin,dr: ',embryo(j)%rmag, rin,dr
 enddo
 
 end subroutine get_icurrent

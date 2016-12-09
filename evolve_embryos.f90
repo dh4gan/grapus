@@ -12,8 +12,13 @@ SUBROUTINE evolve_embryos
   real :: vaptime, hillcore,rchoose,orb,rstrip
   real :: core_energy,embryo_energy
 
+  real :: tsnap, tdump
+
   ! Debug line - picks an embryo to write data to file on
   jwrite = 3
+
+  tsnap = 1.0e3*yr
+  tdump = 0.0
 
   ! Initialise all embryos
 
@@ -341,8 +346,8 @@ SUBROUTINE evolve_embryos
 
   CALL timestep
 
-  print*, 'global timestep dt ',dt/yr
-  print*, 'Finishcheck: ',finishcheck
+  !write(*,'(A,1P,1e18.4)') 'global timestep dt ',dt/yr
+
   ! If all embryos have finished, exit the loop
   IF(finishcheck==1) exit
 
@@ -351,7 +356,7 @@ SUBROUTINE evolve_embryos
 
   ! Now evolve the disc for this timestep
 
-  print*, 'Evolving disc ', t/yr, dt/yr,q_disc
+ 
   IF(mstar<mdisc.or.t<dt.or.t/yr>1.0e6) exit 
   ! Evolve the disc
 
@@ -359,7 +364,14 @@ SUBROUTINE evolve_embryos
   timeup = 0
   CALL evolve_disc(t,dt,timeup)
 
-  call nbody_output(t) ! Debug line - check nbody outputs (TODO)
+  tdump = tdump + dt
+  if(tdump>tsnap) then
+      write(*,'(A,1P,3e18.4)'), 't, dt, mdisc/mstar: ', t/yr, dt/yr,q_disc
+!     write(*,'(A,1P,1e18.4,A)') 't=',t/yr, ' years'
+     tdump = 0.0
+  endif
+
+  if(nbody=='y') call nbody_output(t) ! Debug line - check nbody outputs (TODO)
 
   IF(timeup==1) exit
 

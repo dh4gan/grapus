@@ -10,7 +10,7 @@ use embryodata
 logical :: withintolerance
 
 withintolerance = .false.
-print*, 'Attempting integration RK4'
+!print*, 'Attempting integration RK4'
 
 do while(withintolerance .eqv. .false.)
 
@@ -26,11 +26,6 @@ end do
 
 pos = newpos
 vel = newvel
-print*, 'New positions:'
-
-print*, pos
-
-print*, 'New timestep: ',dt_nbody
 
 call nbody_system_properties
 

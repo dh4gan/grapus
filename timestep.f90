@@ -48,5 +48,4 @@ endif
 ! Prevent overly long timesteps
 dt = min(dt,100.0*yr)
 
-print*, 'global timestep: dt ', dt
 END SUBROUTINE timestep

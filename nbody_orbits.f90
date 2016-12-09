@@ -170,8 +170,7 @@ do ibody=2,nbodies
     long(ibody) = embryo(iembryo)%longascend
     om(ibody) = embryo(iembryo)%argper
     nu(ibody) = embryo(iembryo)%trueanom
-
-    print*, a(ibody), e(ibody), i(ibody), nu(ibody)
+    
     rmag(ibody) = embryo(iembryo)%semimaj * (1.0 - e(ibody) * e(ibody)) / (1.0 &
 + e(ibody) * cos(nu(ibody)))
 
