@@ -9,6 +9,6 @@ real,dimension(3,nbodies), intent(out) :: acceleration
 acceleration(:,:) = 0.0
 
 call nbody_grav_acceleration(position,acceleration)
-!call nbody_drag_terms(position,velocity,acceleration)
+call nbody_drag_terms(position,velocity,acceleration)
 
 end subroutine nbody_acceleration

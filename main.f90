@@ -99,7 +99,7 @@ PROGRAM TD_synthesis
      ! Subroutine outputs final M,R,a to file
      IF(nembryo>0) CALL evolve_embryos
 
-     !if(istar==3) STOP
+     if(istar==3) STOP
   ENDDO
 
   close(istart)

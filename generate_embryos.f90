@@ -53,7 +53,7 @@ SUBROUTINE generate_embryos
      nembryo=0
      return
   ELSE
-     print*, 'Fragmentation radius is ',rfrag/udist, ' AU: annulus ',irfrag
+     write(*,'(A,X,F10.2,A,X,I5)') 'Fragmentation radius is ',rfrag/udist, ' AU: annulus ',irfrag
   ENDIF
 
   ! Generate number of possible embryos

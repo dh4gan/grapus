@@ -70,7 +70,7 @@ do j=1,nembryo
    ! embryos on the inner boundary are stopped
    IF(embryo(j)%icurrent<=1) embryo(j)%finished=1
 
-   if(istar==3) print*, embryo(j)%semimaj, embryo(j)%ecc, embryo(j)%icurrent, embryo(j)%finished
+   !if(istar==3) print*, embryo(j)%m/mjup, embryo(j)%semimaj, embryo(j)%ecc, embryo(j)%icurrent, embryo(j)%finished
 enddo
 
 end subroutine get_icurrent

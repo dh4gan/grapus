@@ -4,7 +4,7 @@ subroutine nbody_grav_acceleration(position,acceleration)
 ! IN THE HELIOCENTRIC FRAME (Keeps star at the centre)
 
 ! Calculated in units where G=1, M=msol, r=AU, t=2pi units/year
-use stardata, only: istar ! Debug line (TODO)
+
 use embryodata
 implicit none
 
@@ -26,8 +26,6 @@ do ibody=2,nbodies
     acceleration(:,ibody) = acceleration(:,ibody) - &
             (mass(1)+mass(ibody))*position(:,ibody)/(magipos*magipos*magipos)
 
-    if(istar==3.and.ibody==2) print*, 'ACC STAR',acceleration(:,ibody)
-    if(magipos<small) print*, 'AARGH Magipos'
     ! Again skip the central star
     do jbody=2,nbodies
 
@@ -43,17 +41,13 @@ do ibody=2,nbodies
                 position(2,jbody)*position(2,jbody)+ &
                 position(3,jbody)*position(3,jbody))
 
-           if(magjpos<small) print*, 'AARGH Magjpos'
-           if(relpos<small) print*, 'AARGH relpos'
+
            do ix=1,3
               acceleration(ix,ibody) = acceleration(ix,ibody) - &
                    mass(jbody)*sep(ix)/(relpos*relpos*relpos) - &
                    mass(jbody)*position(ix,jbody)/(magjpos*magjpos*magjpos)
            enddo
 
-           if(istar==3.and.ibody==2)then
-              print*, 'ACC ',jbody,sep,position(1,jbody),acceleration(1,ibody)
-           endif
         enddo
 
 enddo

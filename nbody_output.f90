@@ -2,6 +2,7 @@ subroutine nbody_output(t)
 ! Outputs data to file
 ! Currently writes each particle to separate file
 
+use stardata, only : istar ! Debug line
 use embryodata
 use eosdata,only: yr,twopi
 

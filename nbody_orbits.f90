@@ -46,6 +46,8 @@ embryo(iembryo)%ecc = sqrt(eccvector(1,ibody)*eccvector(1,ibody) + &
 embryo(iembryo)%semimaj = angmag(ibody)*angmag(ibody)/&
     (gravparam*(1.0- embryo(iembryo)%ecc*embryo(iembryo)%ecc))
 
+if(embryo(iembryo)%semimaj < 0.0) embryo(iembryo)%semimaj = abs(embryo(iembryo)%semimaj)
+
 embryo(iembryo)%a = embryo(iembryo)%semimaj*udist
 
 embryo(iembryo)%inc = 0.0

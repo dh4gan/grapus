@@ -361,9 +361,8 @@ SUBROUTINE evolve_embryos
   CALL evolve_disc(t,dt,timeup)
 
   tdump = tdump + dt
-  if(tdump>tsnap .or. istar==3) then
+  if(tdump>tsnap) then
       write(*,'(A,1P,3e18.4)'), 't, dt, mdisc/mstar: ', t/yr, dt/yr,q_disc
-!     write(*,'(A,1P,1e18.4,A)') 't=',t/yr, ' years'
      tdump = 0.0
   endif
 
@@ -392,16 +391,17 @@ ENDDO
 ! Output data pertaining to all embryos
 
 print*, 'Resulting ', nembryo, ' Objects:'
+print*, '(istar, iproperties, a,e,i,m,r,rcore,mcore)'
 DO j=1,nembryo
    
   
   IF(embryo(j)%R > 1.0 .or.embryo(j)%rcore>1.0 .or. embryo(j)%m/mearth >1.0e-3) THEN   
-     WRITE(*,'("Run ",I5, ", Embryo ", I2,": ",7I5,7F12.4)') istar, j, embryo(j)%imelt, embryo(j)%ivap,embryo(j)%idiss, &
+     WRITE(*,'("Run ",I5, ", Embryo ", I2,": ",7I2,7F12.4)') istar, j, embryo(j)%imelt, embryo(j)%ivap,embryo(j)%idiss, &
           embryo(j)%igrown, embryo(j)%iself, embryo(j)%ijeans, embryo(j)%itidal, &
           embryo(j)%a/udist, embryo(j)%ecc, embryo(j)%inc, embryo(j)%M/Mjup, embryo(j)%R/Rjup, &
         embryo(j)%mcore/mearth, embryo(j)%rcore/rearth
 
-     WRITE(ifinal,'(8I5,7E18.10)') istar, embryo(j)%imelt, embryo(j)%ivap, embryo(j)%idiss, &
+     WRITE(ifinal,'(8I2,7E18.10)') istar, embryo(j)%imelt, embryo(j)%ivap, embryo(j)%idiss, &
           embryo(j)%igrown, embryo(j)%iself, embryo(j)%ijeans, embryo(j)%itidal,&
           embryo(j)%a/udist, embryo(j)%ecc, embryo(j)%inc, embryo(j)%m/mjup, embryo(j)%r/rjup, &
           embryo(j)%rcore/rearth, embryo(j)%mcore/mearth
