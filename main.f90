@@ -31,6 +31,25 @@ PROGRAM TD_synthesis
 
   END INTERFACE
 
+  ! Print introductory text
+
+  print*, '*****************************************************************'
+  print*, '*   POPULATION SYNTHESIS OF SELF-GRAVITATING  '
+  print*, '*   DISC FRAGMENTATION AND TIDAL DOWNSIZING   '
+  print*, '*'
+  print*, '*   Written by Duncan Forgan'
+  print*, '*'
+  print*, '*   v1.0: 2013 - see Forgan & Rice 2013, MNRAS, 432, pp 3168-3185 '
+  print*, '*   v2.0: 2016 - addition of C parameters and N Body engine'
+  print*, '*'
+  print*, '*   For best results, compile in gfortran '
+  print*, '*   Reads inputs from TD_synth.params '
+  print*, '*   File path to EOS and disc files contained therein '
+  print*, '*'
+  print*, '*****************************************************************'
+
+
+  print*, 'Reading parameters'
   !		Read in input parameters
 
   open(10, file='TD_synth.params', status='unknown')
@@ -53,6 +72,8 @@ PROGRAM TD_synthesis
   read(10,*) rtruncmax             ! Maximum radius of disc models
 
   close(10)
+
+  print*, 'Parameter file read complete'
 
   rin = rin*udist
   dr = dr*udist
@@ -99,7 +120,6 @@ PROGRAM TD_synthesis
      ! Subroutine outputs final M,R,a to file
      IF(nembryo>0) CALL evolve_embryos
 
-     if(istar==3) STOP
   ENDDO
 
   close(istart)
