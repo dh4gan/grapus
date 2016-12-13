@@ -25,6 +25,8 @@ do ibody=2,nbodies
 
 iembryo = ibody-1
 
+if(embryo(iembryo)%finished==1) cycle
+
 embryo(iembryo)%rmag = rmag(ibody)*udist
 
 ! Eccentricity first - calculate eccentricity (Laplace-Runge-Lenz) Vector

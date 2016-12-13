@@ -20,6 +20,8 @@ call nbody_system_properties
    do ibody=2,nbodies
      iembryo = ibody-1
 
+     if(embryo(iembryo)%finished==1) cycle ! Skip finished particles
+
       write(ibody+inbodylog,102) t/yr, mass(ibody),pos(:,ibody), vel(:,ibody), &
            acc(:,ibody),embryo(iembryo)%semimaj, embryo(iembryo)%ecc, &
            embryo(iembryo)%inc, embryo(iembryo)%longascend, &
