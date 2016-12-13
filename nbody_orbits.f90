@@ -77,7 +77,11 @@ embryo(iembryo)%inc = 0.0
 
       nmag = sqrt(nplane(1)*nplane(1) + nplane(2)*nplane(2) + nplane(3)*nplane(3));
 
-      embryo(iembryo)%longascend = acos(nplane(1) / nmag);
+      if(nmag>small) then
+         embryo(iembryo)%longascend = acos(nplane(1) / nmag);
+      else
+         embryo(iembryo)%longascend = 0.0
+      endif
 
       if (nplane(2) < 0.0) embryo(iembryo)%longascend = twopi - embryo(iembryo)%longascend
 

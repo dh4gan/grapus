@@ -7,6 +7,9 @@ subroutine nbody_rk4
 
 use embryodata
 
+implicit none
+
+integer :: ibody
 logical :: withintolerance
 
 withintolerance = .false.
@@ -16,6 +19,11 @@ do while(withintolerance .eqv. .false.)
 
 newpos(:,:) = 0.0
 newvel(:,:) = 0.0
+
+! Switch off velocities of finished particles
+do ibody=2,nbodies
+   if(embryo(ibody-1)%finished==1) vel(:,ibody)=0.0
+enddo
 
 call nbody_integrate(dt_nbody,pos,vel,newpos,newvel)
 call nbody_timestep(newpos,newvel)

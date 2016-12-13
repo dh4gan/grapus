@@ -255,6 +255,7 @@ SUBROUTINE evolve_embryos
         ! Recalculate Hill Radius
         r_hill = embryo(j)%a*(embryo(j)%m/(3.0*mstar))**0.333
 
+        embryo(j)%itidal = 0
         IF(embryo(j)%r > r_hill .and.embryo(j)%itidal==0) THEN
 
            embryo(j)%itidal = 1
