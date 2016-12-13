@@ -6,6 +6,7 @@ subroutine nbody_drag_terms(position,velocity,acceleration)
 ! (cf Alibert et al 2013)
 
 ! Forces not calculated on body 1 (the star)
+! Forces not calculated if embryo is finished
 
 use embryodata
 implicit none
@@ -19,8 +20,8 @@ real,dimension(nbodies) :: vdotr,rmag
 
 do ix=1,3
     do ibody=2,nbodies
-    if(embryo(ibody-1)%tmig>small) then
-    acceleration(ix,ibody) = acceleration(ix,ibody)-velocity(ix,ibody)/(2.0*embryo(ibody-1)%tmig)
+    if(embryo(ibody-1)%tmig>small .and. embryo(ibody-1)%finished==0) then
+       acceleration(ix,ibody) = acceleration(ix,ibody)-velocity(ix,ibody)/(2.0*embryo(ibody-1)%tmig)
     endif
     enddo
 enddo
@@ -40,8 +41,9 @@ rmag(:) = position(1,:)*position(1,:) + &
 do ix=1,3
 
 do ibody=2,nbodies
- if (embryo(ibody-1)%tmig*rmag(ibody)>small) then
-acceleration(ix,:) = acceleration(ix,:) - 2.0*dampfac*vdotr(:)*position(ix,:)/(rmag(ibody)*embryo(ibody-1)%tmig)
+
+ if (embryo(ibody-1)%tmig*rmag(ibody)>small .and.  embryo(ibody-1)%finished==0) then
+acceleration(ix,ibody) = acceleration(ix,ibody) - 2.0*dampfac*vdotr(ibody)*position(ix,ibody)/(rmag(ibody)*embryo(ibody-1)%tmig)
 endif
 enddo
 enddo
@@ -49,8 +51,9 @@ enddo
 ! Inclination damping
 
 do ibody=2,nbodies
-if(embryo(ibody-1)%tmig>small) then
-    acceleration(3,:) = acceleration(3,:) - 2.0*dampfac*vel(3,:)/embryo(ibody-1)%tmig
+!if(embryo(ibody-1)%finished==1) cycle
+if(embryo(ibody-1)%tmig>small .and. embryo(ibody-1)%finished==0) then
+    acceleration(3,ibody) = acceleration(3,ibody) - 2.0*dampfac*vel(3,ibody)/embryo(ibody-1)%tmig
 endif
 end do
 

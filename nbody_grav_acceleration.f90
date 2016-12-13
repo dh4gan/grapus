@@ -18,6 +18,9 @@ real, dimension(3) :: sep
 ! Skip body 1 as we fix the star at the origin
 do ibody=2,nbodies
 
+   ! Ignore particles that have finished
+   if(embryo(ibody-1)%finished==1) cycle
+
     ! Start by computing the force from the star
     magipos = sqrt(position(1,ibody)*position(1,ibody) + &
                 position(2,ibody)*position(2,ibody)+ &
@@ -31,6 +34,9 @@ do ibody=2,nbodies
 
        if(ibody==jbody) cycle ! Don't calculate force on itself
 
+       ! Ignore particles that have finished
+       if(embryo(jbody-1)%finished==1) cycle
+       
         do ix=1,3
             sep(ix) = position(ix,ibody) - position(ix,jbody)
         enddo

@@ -3,6 +3,8 @@ subroutine nbody_acceleration(position,velocity,acceleration)
 
 use embryodata,only: nbodies
 implicit none
+
+
 real,dimension(3,nbodies), intent(in) :: position,velocity
 real,dimension(3,nbodies), intent(out) :: acceleration
 
