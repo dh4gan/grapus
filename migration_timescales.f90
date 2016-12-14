@@ -87,9 +87,13 @@ do j=1,nembryo
       ENDIF
 
 
-     ! write(*,'(A,1P,I1,X,I1,1P,6e18.4)') 'Migration timescales: ', j, migtype,  embryo(j)%a/udist,embryo(j)%m/mjup, &
-!           pressure_crit,  embryo(j)%tmig/yr,  embryo(j)%tcross/yr,  embryo(j)%tgap/yr
+      if(debug=='y') then
 
+         write(*,'(A,1P,I1,X,I1,1P,6e18.4)') 'Migration timescales: ', j, &
+              migtype,  embryo(j)%a/udist,embryo(j)%m/mjup, &
+              pressure_crit,  embryo(j)%tmig/yr,  embryo(j)%tcross/yr, &
+              embryo(j)%tgap/yr
+      endif
    endif
 
 enddo

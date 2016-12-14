@@ -5,6 +5,7 @@ subroutine nbody_rk4
 
 ! Do integration
 
+use stardata,only: debug
 use embryodata
 
 implicit none
@@ -13,7 +14,7 @@ integer :: ibody
 logical :: withintolerance
 
 withintolerance = .false.
-!print*, 'Attempting integration RK4'
+if(debug=='y') print*, 'Attempting integration RK4'
 
 do while(withintolerance .eqv. .false.)
 

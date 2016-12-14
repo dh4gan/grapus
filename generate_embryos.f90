@@ -82,7 +82,7 @@ SUBROUTINE generate_embryos
      !if (nembryo==1) exit ! Debug line - remove (TODO)
   ENDDO
 
-  print*, 'There are ',nembryo, ' embryos'
+  write(*,'(A,I1,A)') 'There are ',nembryo, ' embryos'
 
   ! Allocate embryo type array
 
@@ -140,8 +140,6 @@ SUBROUTINE generate_embryos
      embryo(j)%rcore = 0.0  ! No solid core formed yet
      embryo(j)%tself = 0.0
      embryo(j)%rself = 0.0
-
-     !print*, T1, m1, 1.0e13*rho_ad, kappa_0, embryo(j)%R/udist
 
     ! Initialise state of embryo in terms of evolutionary phases
 
@@ -212,17 +210,21 @@ SUBROUTINE generate_embryos
      !     print*, embryo(j)%m/umass, embryo(j)%a/udist,embryo(j)%R0/udist, embryo(j)%cs0, &
      !          embryo(j)%T0,embryo(j)%t_cool0/yr, embryo(j)%t_grow0/yr, embryo(j)%t_sed0/yr
 
-     write(istart,'(1P,8E18.10)') embryo(j)%a/udist, embryo(j)%m/mjup, embryo(j)%R0/rjup, & 
-          embryo(j)%T0, embryo(j)%scrit, embryo(j)%t_cool0/yr, embryo(j)%t_grow/yr, embryo(j)%t_sed0/yr
+     write(istart,'(1P,8E18.10)') embryo(j)%a/udist, embryo(j)%m/mjup, &
+          embryo(j)%R0/rjup, embryo(j)%T0, embryo(j)%scrit, &
+          embryo(j)%t_cool0/yr, embryo(j)%t_grow/yr, embryo(j)%t_sed0/yr
 
      r_hill = embryo(j)%a*(embryo(j)%m/(3.0*mstar))**0.333
-     WRITE(*, '(I2,1X,I4,1P,6E18.4)') j, embryo(j)%iform, embryo(j)%m/mjup, embryo(j)%a/udist, embryo(j)%R/rjup,&
-          embryo(j)%t_cool0/yr, embryo(j)%t_grow/yr, embryo(j)%t_sed0/yr
+
+     if(debug=='y') then
+        write(*, '(I2,1X,I4,1P,6E18.4)') j, embryo(j)%iform, embryo(j)%m/mjup,&
+             embryo(j)%a/udist, embryo(j)%R/rjup,&
+             embryo(j)%t_cool0/yr, embryo(j)%t_grow/yr, embryo(j)%t_sed0/yr
+     endif
 
   ENDDO
 
 ! Write data referring to this star-disc-planets system to log file
-
 
   WRITE(ilog,'(I6,5E18.10, I3)') istar, mstar/umass, mdisc/umass, q_disc, rout/udist, rfrag/udist, nembryo
 

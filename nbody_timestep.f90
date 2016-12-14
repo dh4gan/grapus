@@ -2,6 +2,7 @@ subroutine nbody_timestep(position,velocity)
 ! Adjusts the timestep based on a standard step doubling algorithm
 ! Takes two half timesteps and compares to the current result
 
+use stardata,only: debug
 use embryodata
 
 implicit none
@@ -46,8 +47,11 @@ if(maxerror>small) then
 endif
 
 if(maxerror>tolerance) then
-   !print*,'error too large'
-   !print*,tolerance,maxerror,dt_nbody
+   if(debug=='y') then
+      print*,'error too large'
+      print*,tolerance,maxerror,dt_nbody
+   endif
+
    dt_nbody = dt_nbody*0.1
 endif
 

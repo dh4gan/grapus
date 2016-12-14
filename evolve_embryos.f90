@@ -7,15 +7,13 @@ SUBROUTINE evolve_embryos
 
   implicit none
 
-  integer :: i,j, jwrite,timeup
+  integer :: i,j, timeup,nsurvive
   real :: M_t, r_hill, t,l_jeans,factor
   real :: vaptime, hillcore,rchoose,orb,rstrip
   real :: core_energy,embryo_energy
 
   real :: tsnap, tdump
 
-  ! Debug line - picks an embryo to write data to file on
-  jwrite = 3
 
   tsnap = 1.0e3*yr
   tdump = 0.0
@@ -343,8 +341,6 @@ SUBROUTINE evolve_embryos
 
   CALL timestep
 
-  !write(*,'(A,1P,1e18.4)') 'global timestep dt ',dt/yr
-
   ! If all embryos have finished, exit the loop
   IF(finishcheck==1) exit
 
@@ -363,7 +359,7 @@ SUBROUTINE evolve_embryos
 
   tdump = tdump + dt
   if(tdump>tsnap) then
-      write(*,'(A,1P,3e18.4)'), 't, dt, mdisc/mstar: ', t/yr, dt/yr,q_disc
+     if(debug=='y') write(*,'(A,1P,3e18.4)'), 't, dt, mdisc/mstar: ', t/yr, dt/yr,q_disc
      tdump = 0.0
   endif
 
@@ -391,16 +387,27 @@ ENDDO
 
 ! Output data pertaining to all embryos
 
-print*, 'Resulting ', nembryo, ' Objects:'
-print*, '(istar, iproperties, a,e,i,m,r,rcore,mcore)'
+if(debug=='y') then
+   print*, 'Resulting ', nembryo, ' Objects:'
+   print*, '(istar, iproperties, a,e,i,m,r,rcore,mcore)'
+endif
+
+
+nsurvive = 0
+
 DO j=1,nembryo
    
-  
-  IF(embryo(j)%R > 1.0 .or.embryo(j)%rcore>1.0 .or. embryo(j)%m/mearth >1.0e-3) THEN   
-     WRITE(*,'("Run ",I5, ", Embryo ", I2,": ",7I2,7F12.4)') istar, j, embryo(j)%imelt, embryo(j)%ivap,embryo(j)%idiss, &
-          embryo(j)%igrown, embryo(j)%iself, embryo(j)%ijeans, embryo(j)%itidal, &
-          embryo(j)%a/udist, embryo(j)%ecc, embryo(j)%inc, embryo(j)%M/Mjup, embryo(j)%R/Rjup, &
-        embryo(j)%mcore/mearth, embryo(j)%rcore/rearth
+  IF(embryo(j)%R > 1.0 .or.embryo(j)%rcore>1.0 .or. embryo(j)%m/mearth >1.0e-3) THEN
+
+     nsurvive = nsurvive+1
+     if(debug=='y') then
+        WRITE(*,'("Run ",I5, ", Embryo ", I2,": ",7I2,7F12.4)') istar, j, embryo(j)%imelt, &
+             embryo(j)%ivap,embryo(j)%idiss, embryo(j)%igrown, &
+             embryo(j)%iself, embryo(j)%ijeans, embryo(j)%itidal, &
+             embryo(j)%a/udist, embryo(j)%ecc, embryo(j)%inc, &
+             embryo(j)%M/Mjup, embryo(j)%R/Rjup, &
+             embryo(j)%mcore/mearth, embryo(j)%rcore/rearth
+     endif
 
      WRITE(ifinal,'(8I2,7E18.10)') istar, embryo(j)%imelt, embryo(j)%ivap, embryo(j)%idiss, &
           embryo(j)%igrown, embryo(j)%iself, embryo(j)%ijeans, embryo(j)%itidal,&
@@ -409,6 +416,8 @@ DO j=1,nembryo
   ENDIF
 
 ENDDO
+
+write(*,'(A,I1)') 'Number of survivors: ',nsurvive
 
 if(nbody=='y') call nbody_deallocate_arrays
 

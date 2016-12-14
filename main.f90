@@ -54,6 +54,8 @@ PROGRAM TD_synthesis
 
   open(10, file='TD_synth.params', status='unknown')
   read(10,*) prefix                ! Output file prefix
+  read(10,*) debug                 ! Run in debug mode? (y/n)
+  read(10,*) nbody                 ! Use N Body integrator? (y/n)
   read(10,*) Nstar                 ! Number of star systems to simulate
   read(10,*) datafilepath          ! File path to location of disc file
   read(10,*) discfile              ! Disc file contains output semi-analytic disc models
@@ -67,7 +69,6 @@ PROGRAM TD_synthesis
   read(10,*) c_collapse            ! Collapse timescale factor
   read(10,*) truncate_disc         ! Truncate disc or not (y/n)
   read(10,*) core_feedback         ! Radiative Feedback of Core Formation? (y/n)
-  read(10,*) nbody                 ! Use N-Body integrator? (y/n)
   read(10,*) rtrunc                ! Truncation radius of disc
   read(10,*) rtruncmax             ! Maximum radius of disc models
 

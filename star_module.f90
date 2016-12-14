@@ -13,7 +13,7 @@ MODULE stardata
   real :: mdotvisc,rhomid,rfrag,rmax,Lx, tmax
   character(100) :: discfile,datafilepath
   character(100) :: prefix
-  character(1) :: truncate_disc
+  character(1) :: truncate_disc,debug
 
   real,allocatable,dimension(:) :: sigma_d, cs_d, omega_d, gamma_J
   real,allocatable,dimension(:) :: betac_d, mjeans, r_d, H_d,alpha_d

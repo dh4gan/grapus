@@ -39,7 +39,7 @@ else
    ! If core has spent long enough at this radius, then move it inwards one grid
 
    IF(embryo(j)%Nsteps<=0) THEN
-      !print*, 'Moving embryo ', j, t/yr, embryo(j)%Nsteps, embryo(j)%t_spent/yr,embryo(j)%tmig/yr, dr/embryo(j)%a
+  
       embryo(j)%a = embryo(j)%a-dr
       embryo(j)%icurrent = embryo(j)%icurrent-1
       embryo(j)%t_spent = 0.0
@@ -70,7 +70,7 @@ do j=1,nembryo
    ! embryos on the inner boundary are stopped
    IF(embryo(j)%icurrent<=1) embryo(j)%finished=1
 
-   !if(istar==3) print*, embryo(j)%m/mjup, embryo(j)%semimaj, embryo(j)%ecc, embryo(j)%icurrent, embryo(j)%finished
+   if(debug=='y') print*, embryo(j)%m/mjup, embryo(j)%semimaj, embryo(j)%ecc, embryo(j)%icurrent, embryo(j)%finished
 enddo
 
 end subroutine get_icurrent
