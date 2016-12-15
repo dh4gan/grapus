@@ -79,7 +79,7 @@ SUBROUTINE generate_embryos
 
      rtest = r_d(i)
      nembryo = nembryo+1
-     !if (nembryo==1) exit ! Debug line - remove (TODO)
+     
   ENDDO
 
   write(*,'(A,I1,A)') 'There are ',nembryo, ' embryos'
@@ -227,6 +227,8 @@ SUBROUTINE generate_embryos
 ! Write data referring to this star-disc-planets system to log file
 
   WRITE(ilog,'(I6,5E18.10, I3)') istar, mstar/umass, mdisc/umass, q_disc, rout/udist, rfrag/udist, nembryo
+  call flush(istart)
+  call flush(ilog)
 
 
 ! If this is an N Body run, then create arrays for N body calculation
@@ -266,34 +268,33 @@ if(nbody=='y') then
 
     ! Debug lines - open N Body files to check orbits
 
-    ! First set up character for run ID
-    nfiles = Nstar
-    nzeros = int(log10(nfiles))+2
-    write(zerostring, '(I1)')nzeros
-    filenumformat = "(I"//TRIM(zerostring)//"."//TRIM(zerostring)//")"
+    if(debug=='y') then
+       ! First set up character for run ID
+       nfiles = Nstar
+       nzeros = int(log10(nfiles))+2
+       write(zerostring, '(I1)')nzeros
+       filenumformat = "(I"//TRIM(zerostring)//"."//TRIM(zerostring)//")"
+       
+       write(runno,filenumformat) istar
+       
+       ! Now character for embryo IDs
+       nfiles = nbodies
+       nzeros = int(log10(nfiles)) +2
+       write(zerostring, '(I1)')nzeros
+       filenumformat = "(I"//TRIM(zerostring)//"."//TRIM(zerostring)//")"
+       
+       ! Open output files
+       do ibody=2,nbodies          
+          write(fileno, filenumformat) ibody          
+          outputfile = TRIM(prefix)//TRIM(runno)//"."//TRIM(fileno)          
+          open(ibody+inbodylog,file=outputfile, form="formatted")
+       enddo
+       
+       ! Now set up log file
+       outputfile = TRIM(prefix)//TRIM(runno)//".log"
 
-    write(runno,filenumformat) istar
-
-    ! Now character for embryo IDs
-    nfiles = nbodies
-    nzeros = int(log10(nfiles)) +2
-    write(zerostring, '(I1)')nzeros
-    filenumformat = "(I"//TRIM(zerostring)//"."//TRIM(zerostring)//")"
-
-    ! Open output files
-    do ibody=2,nbodies
-      
-       write(fileno, filenumformat) ibody
-
-       outputfile = TRIM(prefix)//TRIM(runno)//"."//TRIM(fileno)
-      
-       open(ibody+inbodylog,file=outputfile, form="formatted")
-    enddo
-
-    ! Now set up log file
-    outputfile = TRIM(prefix)//TRIM(runno)//".log"
-
-    open(inbodylog,file=outputfile,form="formatted")
+       open(inbodylog,file=outputfile,form="formatted")
+    endif
 
     call calc_vector_from_orbit
 

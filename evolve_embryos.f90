@@ -363,7 +363,7 @@ SUBROUTINE evolve_embryos
      tdump = 0.0
   endif
 
-  if(nbody=='y') call nbody_output(t) ! Debug line - check nbody outputs (TODO)
+  if(nbody=='y' .and.debug=='y') call nbody_output(t) ! Debug line - check nbody outputs
 
   IF(timeup==1) exit
 
@@ -409,7 +409,7 @@ DO j=1,nembryo
              embryo(j)%mcore/mearth, embryo(j)%rcore/rearth
      endif
 
-     WRITE(ifinal,'(8I2,7E18.10)') istar, embryo(j)%imelt, embryo(j)%ivap, embryo(j)%idiss, &
+     WRITE(ifinal,'(I6,7I2,1P,7E18.10)') istar, embryo(j)%imelt, embryo(j)%ivap, embryo(j)%idiss, &
           embryo(j)%igrown, embryo(j)%iself, embryo(j)%ijeans, embryo(j)%itidal,&
           embryo(j)%a/udist, embryo(j)%ecc, embryo(j)%inc, embryo(j)%m/mjup, embryo(j)%r/rjup, &
           embryo(j)%rcore/rearth, embryo(j)%mcore/mearth
@@ -418,6 +418,7 @@ DO j=1,nembryo
 ENDDO
 
 write(*,'(A,I1)') 'Number of survivors: ',nsurvive
+call flush(ifinal)
 
 if(nbody=='y') call nbody_deallocate_arrays
 
