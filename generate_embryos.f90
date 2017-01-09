@@ -58,7 +58,8 @@ SUBROUTINE generate_embryos
 
   ! Generate number of possible embryos
   ! Embryo spacing is C Hill Radii, where C uniformly distributed
-  ! between 1.5 and 3 (stored for later use)
+  ! between 1.5 and 'fragsep' (stored for later use)
+  
 
   rtest = rfrag
   i=irfrag
@@ -67,7 +68,7 @@ SUBROUTINE generate_embryos
   j = 0
   DO WHILE (i < irout)
      j =j+1
-     cspace(j) = 1.5 + ran2(iseed)*1.5
+     cspace(j) = 1.5 + ran2(iseed)*(fragsep-1.5)
 
      IF(r_d(i)>rmax) exit
 

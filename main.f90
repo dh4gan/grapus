@@ -64,6 +64,7 @@ PROGRAM TD_synthesis
   read(10,*) rin                   ! Disc inner boundary
   read(10,*) dr                    ! Radial separation
   read(10,*) p_kap                 ! opacity index (kappa = kappa_0 T^p_kap)
+  read(10,*) fragsep               ! Maximum frag separation (Hill Radii)
   read(10,*) c_mig                 ! Migration Factor (tmig = c_mig*tmig)
   read(10,*) c_gap                 ! Gap opening factor (tgap = c_gap*tgap)
   read(10,*) c_collapse            ! Collapse timescale factor
