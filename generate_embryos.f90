@@ -107,9 +107,22 @@ SUBROUTINE generate_embryos
      totalmass = totalmass + embryo(j)%m
 
     ! If this is an n-body run, then set up orbital data here
-    ! TODO - proper eccentricity distribution here!
-    embryo(j)%ecc = 0.0
-    embryo(j)%inc = 0.0
+
+     ! If using a non-zero initial eccentricity/inclination, sample from
+     ! Gaussians here
+     if(initialecc=='y') then
+
+        call sample_gaussian(embryo(j)%ecc, ecc_mu, ecc_sig)
+        if(embryo(j)%ecc <0.0) embryo(j)%ecc = 0.0
+
+        call sample_gaussian(embryo(j)%inc, inc_mu,inc_sig)
+        if(embryo(j)%inc <0.0) embryo(j)%inc = twopi - embryo(j)%inc
+     else
+
+        embryo(j)%ecc = 0.0
+        embryo(j)%inc = 0.0
+     endif
+
     embryo(j)%longascend = 0.0
     embryo(j)%argper = 0.0
     embryo(j)%trueanom = twopi*ran2(iseed)

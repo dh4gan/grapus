@@ -10,6 +10,7 @@ migrate1_rout100.dat	Input file for disc models
 0.01 			Radial spacing of disc models
 1.0			Opacity Powerlaw index
 3.0			Maximum Initial Fragment Separation (units: Hill Radii)
+y			Give Fragments initial eccentricity/inclination?
 1.0			Migration parameter (tmig -->C*tmig)
 1.0			Gap Opening Parameter (tgap -->C*tgap)
 1.0			Collapse Timescale Parameter (tcool0 --> C*tcool0

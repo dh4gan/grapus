@@ -24,12 +24,17 @@ real, parameter :: Tdiss = 3000.0 ! Dissociation Temperature for H2
 
 real, parameter :: tolerance = 1.0e-5
 real, parameter :: G_nbody =1.0
+real, parameter :: ecc_mu = 0.094
+real, parameter :: ecc_sig = 0.095
+real, parameter :: inc_mu = 0.00091
+real, parameter :: inc_sig = 0.00005
+
 
 integer :: nembryo, nbodies, istart,ifinal,ilog,inbodylog,finishcheck
 
 real :: fg,kappa_0,kappa_star,rho_ad, m1,T1,mfp,dt, p_kap, p_grow
 real :: c_mig,c_gap,c_collapse, maxerror, fragsep
-character(1) :: core_feedback,nbody
+character(1) :: core_feedback,nbody,initialecc
 
 type GE_embryo
 

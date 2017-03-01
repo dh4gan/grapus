@@ -43,7 +43,7 @@ do ix=1,3
 do ibody=2,nbodies
 
  if (embryo(ibody-1)%tmig*rmag(ibody)>small .and.  embryo(ibody-1)%finished==0) then
-acceleration(ix,ibody) = acceleration(ix,ibody) - 2.0*dampfac*vdotr(ibody)*position(ix,ibody)/(rmag(ibody)*embryo(ibody-1)%tmig)
+acceleration(ix,ibody) = acceleration(ix,ibody) - 2.0*vdotr(ibody)*position(ix,ibody)/(rmag(ibody)*rmag(ibody)*dampfac*embryo(ibody-1)%tmig)
 endif
 enddo
 enddo
@@ -53,7 +53,7 @@ enddo
 do ibody=2,nbodies
 !if(embryo(ibody-1)%finished==1) cycle
 if(embryo(ibody-1)%tmig>small .and. embryo(ibody-1)%finished==0) then
-    acceleration(3,ibody) = acceleration(3,ibody) - 2.0*dampfac*vel(3,ibody)/embryo(ibody-1)%tmig
+    acceleration(3,ibody) = acceleration(3,ibody) - 2.0*vel(3,ibody)/(dampfac*embryo(ibody-1)%tmig)
 endif
 end do
 
