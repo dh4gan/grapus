@@ -2,6 +2,7 @@ MODULE stardata
   integer, parameter :: nrannuli =10000
   real,parameter :: tolerance = 1.0e-4
 
+  integer,parameter :: idisc = 5
   integer,parameter :: nvar = 7
 !  integer,parameter:: ntime_mod = 95
 !  integer,parameter :: ntime_mod = 450

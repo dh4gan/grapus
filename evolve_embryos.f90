@@ -366,7 +366,7 @@ SUBROUTINE evolve_embryos
         ifile = isnapfile+isnap
         nsurvive = 0
                
-        OPEN(ifile,file=snapshotfile(isnap),position='append')
+        OPEN(ifile,file=snapshotfile(isnap),form='formatted',status='old',position='append')
 
         call write_population_snapshot(ifile,nsurvive)
      endif

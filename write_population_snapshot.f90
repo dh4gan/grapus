@@ -25,5 +25,6 @@ DO j=1,nembryo
    
 ENDDO
 
+call flush(ifile)
 
 end subroutine write_population_snapshot

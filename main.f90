@@ -115,10 +115,10 @@ PROGRAM TD_synthesis
      write(snapchar,zeroformat) isnap
 
      snapshotfile(isnap) = trim(prefix)//'.'//trim(snapchar)
-     open(isnapfile+isnap,file=snapshotfile(isnap),status='new')
+     open(isnapfile+isnap,file=snapshotfile(isnap),status='unknown',form='formatted')
 
      ! Write the time at the beginning of every snapshot file
-     write(isnapfile+isnap) tsnap*isnap
+     write(isnapfile+isnap,*) tsnap*isnap
   enddo
 
   ! Read in Equation of State for SGD

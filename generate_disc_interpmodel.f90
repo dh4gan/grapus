@@ -22,7 +22,7 @@ IF(imodel==1) THEN
 discfile = TRIM(datafilepath)//TRIM(discfile)
 
 ! Do pass of first model to check number of time dumps
-   OPEN(12,file=discfile,status='unknown')
+   OPEN(idisc,file=discfile,status='unknown')
   ! read(12,*) nmodels,ntime_mod,nrad_mod
 
    ntime_mod = 900
@@ -45,7 +45,7 @@ ELSE IF(imodel == nmodels) THEN
 
    imodel=1
 
-   rewind(12)
+   rewind(idisc)
 
 ENDIF
 
@@ -67,9 +67,9 @@ i = 1
 timemod(i) = 1.0d0
 
 Do While (timemod(i) .ne. 0.0d0)
-   read(12,*) timemod(i), Lx
+   read(idisc,*) timemod(i), Lx
    do j = 1, nrad_mod
-      read(12,*) r_mod(i,j), sigma_mod(i,j), nu_mod(i,j), &
+      read(idisc,*) r_mod(i,j), sigma_mod(i,j), nu_mod(i,j), &
                        Tc_mod(i,j),tau_mod(i,j),alpha_mod(i,j), Mstar_mod(i)
    enddo
 
@@ -80,9 +80,9 @@ EndDo
 
 
 do i=2,ntime_mod
-   read(12,*) timemod(i),Lx
+   read(idisc,*) timemod(i),Lx
    do j=1,nrad_mod
-      read(12,*) r_mod(i,j), sigma_mod(i,j), nu_mod(i,j), &
+      read(idisc,*) r_mod(i,j), sigma_mod(i,j), nu_mod(i,j), &
                        Tc_mod(i,j),tau_mod(i,j),alpha_mod(i,j), Mstar_mod(i)
    enddo
 enddo
