@@ -14,9 +14,7 @@ SUBROUTINE generate_embryos
 
 
   ! Debug variables - for nbody output files
-  integer :: nzeros
   real :: nfiles
-  character(1) :: zerostring
   character(100) :: outputfile
   character(6) :: filenumformat
   character(10) :: fileno,runno

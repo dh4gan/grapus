@@ -7,12 +7,12 @@ SUBROUTINE evolve_embryos
 
   implicit none
 
-  integer :: i,j, timeup,nsurvive
+  integer :: i,j, timeup,nsurvive,ifile
   real :: M_t, r_hill, t,l_jeans,factor
   real :: vaptime, hillcore,rchoose,orb,rstrip
   real :: core_energy,embryo_energy
 
-  real :: tsnap, tdump
+  real :: tdump
 
 
   tsnap = 1.0e3*yr
@@ -359,7 +359,18 @@ SUBROUTINE evolve_embryos
 
   tdump = tdump + dt
   if(tdump>tsnap) then
+     isnap = isnap +1
      if(debug=='y') write(*,'(A,1P,3e18.4)'), 't, dt, mdisc/mstar: ', t/yr, dt/yr,q_disc
+         
+     if(isnap<nsnaps) then
+        ifile = isnapfile+isnap
+        nsurvive = 0
+               
+        OPEN(ifile,file=snapshotfile(isnap),position='append')
+
+        call write_population_snapshot(ifile,nsurvive)
+     endif
+
      tdump = 0.0
   endif
 
@@ -390,32 +401,44 @@ ENDDO
 if(debug=='y') then
    print*, 'Resulting ', nembryo, ' Objects:'
    print*, '(istar, iproperties, a,e,i,m,r,rcore,mcore)'
+
+   do j=1,nembryo
+      WRITE(*,'("Run ",I5, ", Embryo ", I2,": ",7I2,7F12.4)') istar, j, &
+           embryo(j)%imelt, &
+           embryo(j)%ivap,embryo(j)%idiss, embryo(j)%igrown, &
+           embryo(j)%iself, embryo(j)%ijeans, embryo(j)%itidal, &
+           embryo(j)%a/udist, embryo(j)%ecc, embryo(j)%inc, &
+           embryo(j)%M/Mjup, embryo(j)%R/Rjup, &
+           embryo(j)%mcore/mearth, embryo(j)%rcore/rearth
+   enddo
 endif
 
 
 nsurvive = 0
 
-DO j=1,nembryo
-   
-  IF(embryo(j)%R > 1.0 .or.embryo(j)%rcore>1.0 .or. embryo(j)%m/mearth >1.0e-3) THEN
+call write_population_snapshot(ifinal,nsurvive)
 
-     nsurvive = nsurvive+1
-     if(debug=='y') then
-        WRITE(*,'("Run ",I5, ", Embryo ", I2,": ",7I2,7F12.4)') istar, j, embryo(j)%imelt, &
-             embryo(j)%ivap,embryo(j)%idiss, embryo(j)%igrown, &
-             embryo(j)%iself, embryo(j)%ijeans, embryo(j)%itidal, &
-             embryo(j)%a/udist, embryo(j)%ecc, embryo(j)%inc, &
-             embryo(j)%M/Mjup, embryo(j)%R/Rjup, &
-             embryo(j)%mcore/mearth, embryo(j)%rcore/rearth
-     endif
-
-     WRITE(ifinal,'(I6,7I2,1P,7E18.10)') istar, embryo(j)%imelt, embryo(j)%ivap, embryo(j)%idiss, &
-          embryo(j)%igrown, embryo(j)%iself, embryo(j)%ijeans, embryo(j)%itidal,&
-          embryo(j)%a/udist, embryo(j)%ecc, embryo(j)%inc, embryo(j)%m/mjup, embryo(j)%r/rjup, &
-          embryo(j)%rcore/rearth, embryo(j)%mcore/mearth
-  ENDIF
-
-ENDDO
+!!$DO j=1,nembryo
+!!$   
+!!$  IF(embryo(j)%R > 1.0 .or.embryo(j)%rcore>1.0 .or. embryo(j)%m/mearth >1.0e-3) THEN
+!!$
+!!$     nsurvive = nsurvive+1
+!!$     if(debug=='y') then
+!!$        WRITE(*,'("Run ",I5, ", Embryo ", I2,": ",7I2,7F12.4)') istar, j, embryo(j)%imelt, &
+!!$             embryo(j)%ivap,embryo(j)%idiss, embryo(j)%igrown, &
+!!$             embryo(j)%iself, embryo(j)%ijeans, embryo(j)%itidal, &
+!!$             embryo(j)%a/udist, embryo(j)%ecc, embryo(j)%inc, &
+!!$             embryo(j)%M/Mjup, embryo(j)%R/Rjup, &
+!!$             embryo(j)%mcore/mearth, embryo(j)%rcore/rearth
+!!$     endif
+!!$
+!!$     WRITE(ifinal,'(I6,7I2,1P,7E18.10)') istar, embryo(j)%imelt, embryo(j)%ivap, embryo(j)%idiss, &
+!!$          embryo(j)%igrown, embryo(j)%iself, embryo(j)%ijeans, embryo(j)%itidal,&
+!!$          embryo(j)%a/udist, embryo(j)%ecc, embryo(j)%inc, embryo(j)%m/mjup, embryo(j)%r/rjup, &
+!!$          embryo(j)%rcore/rearth, embryo(j)%mcore/mearth
+!!$  ENDIF
+!!$
+!!$ENDDO
 
 write(*,'(A,I1)') 'Number of survivors: ',nsurvive
 call flush(ifinal)

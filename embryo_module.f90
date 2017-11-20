@@ -29,12 +29,20 @@ real, parameter :: ecc_sig = 0.095
 real, parameter :: inc_mu = 0.00091
 real, parameter :: inc_sig = 0.00005
 
+integer,parameter :: istart = 10
+integer,parameter :: ifinal = 11
+integer,parameter :: ilog = 12
+integer,parameter :: inbodylog = 20
+integer,parameter :: isnapfile = 40
 
-integer :: nembryo, nbodies, istart,ifinal,ilog,inbodylog,finishcheck
+integer :: nembryo, nbodies,isnap,nsnaps,nzeros,finishcheck
 
 real :: fg,kappa_0,kappa_star,rho_ad, m1,T1,mfp,dt, p_kap, p_grow
-real :: c_mig,c_gap,c_collapse, maxerror, fragsep
-character(1) :: core_feedback,nbody,initialecc
+real :: c_mig,c_gap,c_collapse, maxerror, fragsep,tsnap,maxsnap
+character(1) :: core_feedback,nbody,multishot,initialecc,zerostring
+character(6) :: zeroformat,snapchar
+
+character(100),allocatable,dimension(:) :: snapshotfile
 
 type GE_embryo
 

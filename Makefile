@@ -42,7 +42,7 @@ SOURCESAF90 = star_module.f90 embryo_module.f90 eosmodule.f90  main.f90 \
 	nbody_grav_acceleration.f90 nbody_drag_terms.f90 \
 	nbody_deallocate_arrays.f90 nbody_orbits.f90 \
 	nbody_output.f90 nbody_system_properties.f90  nbody_rk4.f90 \
-	sample_gaussian.f90 timestep.f90
+	sample_gaussian.f90 timestep.f90 write_population_snapshot.f90 
 
 OBJECTSA    = $(SOURCESAF90:.f90=.o)
 

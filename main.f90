@@ -40,8 +40,9 @@ PROGRAM TD_synthesis
   print*, '*   Written by Duncan Forgan'
   print*, '*'
   print*, '*   v1.0: 2013 - see Forgan & Rice 2013, MNRAS, 432, pp 3168-3185 '
-  print*, '*   v2.0: 2016 - addition of C parameters and N Body engine'
-  print*, '*'
+  print*, '*   v2.0: 2017 - addition of C parameters and N Body engine'
+  print*, '*                (Forgan et al 2017, in press)'
+  print*, '*'   
   print*, '*   For best results, compile in gfortran '
   print*, '*   Reads inputs from TD_synth.params '
   print*, '*   File path to EOS and disc files contained therein '
@@ -55,6 +56,9 @@ PROGRAM TD_synthesis
   open(10, file='TD_synth.params', status='unknown')
   read(10,*) prefix                ! Output file prefix
   read(10,*) debug                 ! Run in debug mode? (y/n)
+  read(10,*) multishot             ! Multiple time snapshots of popn? (y/n)
+  read(10,*) tsnap                 ! Time between population snapshots
+  read(10,*) maxsnap               ! Pop snapshots not made after this time (except final snapshot!)
   read(10,*) nbody                 ! Use N Body integrator? (y/n)
   read(10,*) Nstar                 ! Number of star systems to simulate
   read(10,*) datafilepath          ! File path to location of disc file
@@ -81,6 +85,10 @@ PROGRAM TD_synthesis
   rin = rin*udist
   dr = dr*udist
 
+
+  tsnap = tsnap*yr
+  maxsnap = maxsnap*yr
+
   p_grow = (1.0+p_kap)/(2.5+p_kap)
 
   iseed = -abs(iseed)
@@ -90,15 +98,28 @@ PROGRAM TD_synthesis
 
   ! Set up output files for initial and final parameters
 
-  istart = 10
-  ifinal = 20
-  ilog = 30
-
-  inbodylog= 40
-
   OPEN(istart, file=TRIM(prefix)//'.initial', status='unknown')
   OPEN(ifinal, file=TRIM(prefix)//'.final',status='unknown')
   OPEN(ilog, file=TRIM(prefix)//'.log', status='unknown')
+
+
+  nsnaps = INT(maxsnap/tsnap)+1
+  nzeros = int(log10(maxsnap/tsnap +1.0))+2
+  write(zerostring,'(I1)') nzeros
+  zeroformat = "(I"//TRIM(zerostring)//"."//TRIM(zerostring)//")"
+
+  allocate(snapshotfile(nsnaps))
+
+  do isnap=1,nsnaps
+
+     write(snapchar,zeroformat) isnap
+
+     snapshotfile(isnap) = trim(prefix)//'.'//trim(snapchar)
+     open(isnapfile+isnap,file=snapshotfile(isnap),status='new')
+
+     ! Write the time at the beginning of every snapshot file
+     write(isnapfile+isnap) tsnap*isnap
+  enddo
 
   ! Read in Equation of State for SGD
 

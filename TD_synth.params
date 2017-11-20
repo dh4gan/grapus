@@ -1,5 +1,8 @@
 test			File prefix for outputs
 n			Run in debug mode? (y/n)
+y			Have multiple snapshots of population? (y/n)
+1.0e3			Time interval between snapshots (years)
+1.0e6			Snapshots not made after this time (except .final!)
 y			Switch on N Body integration? (y/n)
 100			Number of Stars to simulate
 '/data/dhf3/programs/TD_synthesis/'			File path for data
