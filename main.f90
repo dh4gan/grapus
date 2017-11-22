@@ -104,9 +104,11 @@ PROGRAM TD_synthesis
 
 
   nsnaps = INT(maxsnap/tsnap)+1
-  nzeros = int(log10(maxsnap/tsnap +1.0))+2
-  write(zerostring,'(I1)') nzeros
-  zeroformat = "(I"//TRIM(zerostring)//"."//TRIM(zerostring)//")"
+  call get_zero_padding_format(nsnaps,zeroformat)
+
+!  nzeros = int(log10(maxsnap/tsnap +1.0))+2
+!  write(zerostring,'(I1)') nzeros
+!  zeroformat = "(I"//TRIM(zerostring)//"."//TRIM(zerostring)//")"
 
   allocate(snapshotfile(nsnaps))
 
@@ -114,7 +116,7 @@ PROGRAM TD_synthesis
 
      write(snapchar,zeroformat) isnap
 
-     snapshotfile(isnap) = trim(prefix)//'.'//trim(snapchar)
+     snapshotfile(isnap) = trim(prefix)//'.snap.'//trim(snapchar)
      open(isnapfile+isnap,file=snapshotfile(isnap),status='unknown',form='formatted')
 
      ! Write the time at the beginning of every snapshot file

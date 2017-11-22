@@ -1,10 +1,10 @@
 test			File prefix for outputs
-y			Run in debug mode? (y/n)
+n			Run in debug mode? (y/n)
 y			Have multiple snapshots of population? (y/n)
-1.0e2			Time interval between snapshots (years)
-1.0e4			Snapshots not made after this time (except .final!)
+1.0e1			Time interval between snapshots (years)
+1.0e2			Snapshots not made after this time (except .final!)
 y			Switch on N Body integration? (y/n)
-100			Number of Stars to simulate
+10			Number of Stars to simulate
 '/data/dhf3/programs/TD_synthesis/'			File path for data
 migrate1_rout100.dat	Input file for disc models
 1.0e4			Maximum evolution time for systems (years)

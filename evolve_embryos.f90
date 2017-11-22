@@ -14,9 +14,8 @@ SUBROUTINE evolve_embryos
 
   real :: tdump
 
-
-  tsnap = 1.0e3*yr
   tdump = 0.0
+  isnap = 0
 
   ! Initialise all embryos
 
@@ -358,11 +357,13 @@ SUBROUTINE evolve_embryos
   CALL evolve_disc(t,dt,timeup)
 
   tdump = tdump + dt
+
   if(tdump>tsnap) then
      isnap = isnap +1
+
      if(debug=='y') write(*,'(A,1P,3e18.4)'), 't, dt, mdisc/mstar: ', t/yr, dt/yr,q_disc
          
-     if(isnap<nsnaps) then
+     if(isnap.le.nsnaps) then
         ifile = isnapfile+isnap
         nsurvive = 0
                

@@ -48,7 +48,7 @@ endif
 
 if(maxerror>tolerance) then
    if(debug=='y') then
-      print*,'error too large'
+      print*,'reducing timestep'
       print*,tolerance,maxerror,dt_nbody
    endif
 

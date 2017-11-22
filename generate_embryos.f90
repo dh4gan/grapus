@@ -282,28 +282,23 @@ if(nbody=='y') then
 
     if(debug=='y') then
        ! First set up character for run ID
-       nfiles = Nstar
-       nzeros = int(log10(nfiles))+2
-       write(zerostring, '(I1)')nzeros
-       filenumformat = "(I"//TRIM(zerostring)//"."//TRIM(zerostring)//")"
-       
+
+       call get_zero_padding_format(Nstar,filenumformat)
        write(runno,filenumformat) istar
        
        ! Now character for embryo IDs
-       nfiles = nbodies
-       nzeros = int(log10(nfiles)) +2
-       write(zerostring, '(I1)')nzeros
-       filenumformat = "(I"//TRIM(zerostring)//"."//TRIM(zerostring)//")"
+
+       call get_zero_padding_format(nbodies,filenumformat)
        
        ! Open output files
        do ibody=2,nbodies          
           write(fileno, filenumformat) ibody          
-          outputfile = TRIM(prefix)//TRIM(runno)//"."//TRIM(fileno)          
+          outputfile = TRIM(prefix)//".nbodyrun."//TRIM(runno)//".body."//TRIM(fileno)          
           open(ibody+inbodylog,file=outputfile, form="formatted")
        enddo
        
        ! Now set up log file
-       outputfile = TRIM(prefix)//TRIM(runno)//".log"
+       outputfile = TRIM(prefix)//".nbodyrun."//TRIM(runno)//".log"
 
        open(inbodylog,file=outputfile,form="formatted")
     endif

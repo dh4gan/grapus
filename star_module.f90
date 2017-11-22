@@ -31,6 +31,22 @@ MODULE stardata
 
 CONTAINS
 
+  subroutine get_zero_padding_format(nfiles,zeroformat)
+    implicit none
+
+    integer,intent(in) :: nfiles
+    integer :: nzeros
+    character(1) :: zerostring
+    character(6),intent(inout) :: zeroformat
+    
+    nzeros = int(log10(real(nfiles+1)))+2
+    write(zerostring,'(I1)') nzeros
+    zeroformat = "(I"//TRIM(zerostring)//"."//TRIM(zerostring)//")"
+    
+    return 
+  end subroutine get_zero_padding_format
+
+
   FUNCTION ran2(idum)
     INTEGER idum,IM1,IM2,IMM1,IA1,IA2,IQ1,IQ2,IR1,IR2,NTAB,NDIV
     REAL AM,EPS,RNMX
