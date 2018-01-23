@@ -16,7 +16,7 @@ DO j=1,nembryo
    IF(embryo(j)%R > 1.0 .or.embryo(j)%rcore>1.0 .or. embryo(j)%m/mearth >1.0e-3) THEN
 
       nsurvive = nsurvive+1     
-      WRITE(ifile,'(I6,7I2,1P,7E18.10)') istar, embryo(j)%imelt, &
+      WRITE(ifile,'(I6,8I2,1P,7E18.10)') istar, j,embryo(j)%imelt, &
            embryo(j)%ivap, embryo(j)%idiss, embryo(j)%igrown, &
            embryo(j)%iself, embryo(j)%ijeans, embryo(j)%itidal, &
            embryo(j)%a/udist, embryo(j)%ecc, embryo(j)%inc, &
