@@ -3,9 +3,6 @@
 
 This repository executes population synthesis modelling of self-gravitating disc fragmentation and tidal downsizing in protostellar discs.
 
-
-The code returns a grid of disc models as a function of input accretion rate and outer disc radius (for a given set of input disc parameters).
-
 The algorithms in this code are described in the following publications
 
 *Forgan & Rice (2013), MNRAS, 432, pp 3168-3185* (v1.0)
