@@ -1,36 +1,24 @@
 #####################################################
 ###                                               ###
-###     Makefile for the TD_synthesis code        ###
+###             Makefile for GRAPUS               ###
 ###                                               ###
-###         Duncan H. Forgan (23/01/2012)         ###
+###         Duncan H. Forgan (24/01/2018)         ###
 ###       				          ###
 ###                                               ###
 #####################################################
 
 # Compiler variable:
 FC     = gfortran
-VPATH = main/ disc/ embryo/ eos/ nbody/
+VPATH = src/main/ src/disc/ src/embryo/ src/eos/ src/nbody/
 
 
 # For serial runs use these flags
-FFLAGS = -O3 -frecord-marker=4 -fdefault-real-8  -fbounds-check
+FFLAGS = -O3 -frecord-marker=4 -fdefault-real-8  -fbounds-check -Wunused
 
 # For OpenMP runs
 FFLAGS = -O3 -frecord-marker=4 -fdefault-real-8  -fbounds-check -fopenmp -Wunused
 
-# For files generated on stacpolly use these flags
-#FC = ifort
-#ZFFLAGS= -openmp -autodouble -O3
-#ZZFFLAGS = ${ZFFLAGS} # -qflttrap=enable:invalid:zerodivide -g -C -qsigtrap -qf\
-loat=nans
-#FFLAGS = ${ZZFFLAGS} -fPIC -i-dynamic -xW
-
-# For real files use these flags
-#FFLAGS = -O3 -frecord-marker=4
-
 # Create object files:
-#%.o: %.f
-#	$(FC) $(FFLAGS) -c $<
 
 %.o: %.f90
 	$(FC) $(FFLAGS) -c $<
@@ -49,17 +37,13 @@ SOURCESAF90 = star_module.f90 embryo_module.f90 eosmodule.f90  main.f90 \
 OBJECTSA    = $(SOURCESAF90:.f90=.o)
 
 # Create executable files:
-build: TD_synth
+build: grapus
 
-TD_synth: $(OBJECTSA)
+grapus: $(OBJECTSA)
 	$(FC) $(FFLAGS) -o $@ $(OBJECTSA)
  
-#probedata: probedata.f90
-#	 $(FC) $(FFLAGS) probedata.f90 -o probedata
-#	rm -f probedata.o
-
 # Clean statements:
 clean: 
-	\rm *.o *.mod TD_synth
+	\rm *.o *.mod grapus
 
 # End Makefile

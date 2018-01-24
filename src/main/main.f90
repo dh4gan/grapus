@@ -1,10 +1,11 @@
-PROGRAM TD_synthesis
+PROGRAM grapus
 
-  ! Program carries out MC exoplanet synthesis using the 
-  ! tidal downsizing paradigm of Nayakshin et al 
-  ! (see Forgan & Rice 2013, MNRAS, 432, pp 3168-3185 for v1.0)
-
-  ! 6/12/16: Major upgrade - inclusion of RK4 N Body integrator for embryos
+  ! Program carries out population synthesis of gravitational instability 
+  ! using the tidal downsizing paradigm of Nayakshin et al 
+  ! see:
+  ! Forgan & Rice 2013, MNRAS, 432, pp 3168-3185 (v1.0)
+  ! Forgan et al, 2018, MNRAS, 474, pp 5036-5048  (v2.0: adding N body physics)
+  !
   
   use stardata
   use embryodata
@@ -34,17 +35,19 @@ PROGRAM TD_synthesis
   ! Print introductory text
 
   print*, '*****************************************************************'
-  print*, '*   POPULATION SYNTHESIS OF SELF-GRAVITATING  '
-  print*, '*   DISC FRAGMENTATION AND TIDAL DOWNSIZING   '
+  print*, '*   GRAPUS: GRavitational instability PopUlation Synthesis'
   print*, '*'
-  print*, '*   Written by Duncan Forgan'
+  print*, '*   Population Synthesis of Self-Gravitating  '
+  print*, '*   Disc Fragmentation and Tidal Downsizing   '
+  print*, '*'
+  print*, '*   Written by Duncan Forgan (dh4gan)'
   print*, '*'
   print*, '*   v1.0: 2013 - see Forgan & Rice 2013, MNRAS, 432, pp 3168-3185 '
   print*, '*   v2.0: 2017 - addition of C parameters and N Body engine'
-  print*, '*                (Forgan et al 2017, in press)'
+  print*, '*                (Forgan et al 2018, MNRAS, 474, pp 5036-5048)'
   print*, '*'   
   print*, '*   For best results, compile in gfortran '
-  print*, '*   Reads inputs from TD_synth.params '
+  print*, '*   Reads inputs from grapus.params '
   print*, '*   File path to EOS and disc files contained therein '
   print*, '*'
   print*, '*****************************************************************'
@@ -53,12 +56,12 @@ PROGRAM TD_synthesis
   print*, 'Reading parameters'
   !		Read in input parameters
 
-  open(10, file='TD_synth.params', status='unknown')
+  open(10, file='grapus.params', status='unknown')
   read(10,*) prefix                ! Output file prefix
   read(10,*) debug                 ! Run in debug mode? (y/n)
   read(10,*) multishot             ! Multiple time snapshots of popn? (y/n)
   read(10,*) tsnap                 ! Time between population snapshots
-  read(10,*) maxsnap               ! Pop snapshots not made after this time (except final snapshot!)
+  read(10,*) maxsnap               ! Popn time snapshots not made after this time (except final snapshot!)
   read(10,*) nbody                 ! Use N Body integrator? (y/n)
   read(10,*) Nstar                 ! Number of star systems to simulate
   read(10,*) datafilepath          ! File path to location of disc file
@@ -84,7 +87,6 @@ PROGRAM TD_synthesis
 
   rin = rin*udist
   dr = dr*udist
-
 
   tsnap = tsnap*yr
   maxsnap = maxsnap*yr
@@ -152,4 +154,4 @@ PROGRAM TD_synthesis
   close(ifinal)
   close(ilog)
 
-END PROGRAM TD_synthesis
+END PROGRAM grapus
