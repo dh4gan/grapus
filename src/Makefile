@@ -9,6 +9,8 @@
 
 # Compiler variable:
 FC     = gfortran
+VPATH = main/ disc/ embryo/ eos/ nbody/
+
 
 # For serial runs use these flags
 FFLAGS = -O3 -frecord-marker=4 -fdefault-real-8  -fbounds-check
