@@ -1,6 +1,10 @@
 SUBROUTINE evolve_embryos
-  ! Routine takes population of nembryos embryos, and tracks their migration through the disc
+  !****************************************************************************
+  ! Subroutine takes population of nembryos embryos, and tracks their evolution
+  ! both internally and in the disc
   ! This routine evolves embryos simultaneously on a constant timestep
+  !****************************************************************************
+
   use stardata
   use embryodata
   use eosdata
@@ -19,19 +23,17 @@ SUBROUTINE evolve_embryos
 
   ! Initialise all embryos
 
-
   DO j=1,nembryo
 
      embryo(j)%icurrent = embryo(j)%iform
 
      embryo(j)%R = embryo(j)%R0
-     !r_hill = embryo(j)%a*(embryo(j)%m/(3.0*mstar))**0.333
+
 
      embryo(j)%t_spent = 0.0
 
      embryo(j)%finished = 0
      vaptime = (embryo(j)%t_cool0)/(p_kap+1)*( (Tvap/embryo(j)%T0)**(p_kap+1) -1)
-     !print*, 'Embryo ', j, ' has Vapourisation timescale is ', vaptime/yr
 
   ENDDO
 
@@ -69,6 +71,10 @@ SUBROUTINE evolve_embryos
         ! Commented out - useful for future implementations
         ! In general, embryos open "cold gaps" as they are quite massive
 
+
+
+        ! call accrete_gas
+
 !         r_hill = embryo(j)%a*(embryo(j)%m/(3.0*mstar))**0.333
 
         !IF(r_hill <= H_d(i)) THEN
@@ -81,7 +87,12 @@ SUBROUTINE evolve_embryos
         !   ENDIF
         !ENDIF
 
-        ! Evolve the radius and temperature
+
+
+        ! Evolve the embryo radius and central temperature
+
+        ! call evolve_radius
+        ! call evolve_temperature
 
         IF(embryo(j)%idiss==0) THEN
            IF(embryo(j)%itidal==0) rchoose = embryo(j)%R0
@@ -147,6 +158,9 @@ SUBROUTINE evolve_embryos
 
         IF(embryo(j)%ivap==0.and.embryo(j)%ijeans==0) THEN
 
+
+           ! call calc_grain_growth
+
            ! If the dust has not yet grown to sedimentation, check on this timestep
            IF(embryo(j)%igrown==0) THEN             
               embryo(j)%rg = embryo(j)%R
@@ -159,6 +173,9 @@ SUBROUTINE evolve_embryos
            ENDIF
 
            IF(embryo(j)%igrown==1) THEN
+
+              ! call calc_grain_sedimentation
+
               ! If grains already grown, calculate sedimentation timescales
               embryo(j)%t_sed = embryo(j)%t_sed0
 
@@ -208,6 +225,8 @@ SUBROUTINE evolve_embryos
 
               ! If rg smaller than jeans length, core collapses
 
+              ! call calc_graincluster_collapse
+
               IF(embryo(j)%iself==1.and.embryo(j)%ijeans==0.and.embryo(j)%ivap==0) THEN
 
                  !l_jeans = 3.0*Boltzmannk*embryo(j)%T*fg*embryo(j)%m/(4.0*pi*mu*mH*G*&
@@ -228,6 +247,7 @@ SUBROUTINE evolve_embryos
                     embryo(j)%rg = embryo(j)%rcore
 
                     if(core_feedback=='y') then
+                       ! call calc_core_radiativefeedback
                        ! evaluate radiative feedback of core formation on envelope OpenmP FLAGS!
                        core_energy = embryo(j)%mcore*embryo(j)%mcore/embryo(j)%rcore
                        embryo_energy = embryo(j)%m*embryo(j)%m/embryo(j)%r
@@ -249,6 +269,7 @@ SUBROUTINE evolve_embryos
         ENDIF
         !        ENDIF
 
+        ! call calc_tidal_disruption
         ! Recalculate Hill Radius
         r_hill = embryo(j)%a*(embryo(j)%m/(3.0*mstar))**0.333
 
@@ -311,6 +332,7 @@ SUBROUTINE evolve_embryos
 
      ENDIF
 
+     ! call check_for_dead_embryos
      ! If the embryo has disappeared, mark it as finished
      IF(embryo(j)%r <1.0 .and. embryo(j)%rcore <1.0) THEN
         embryo(j)%finished = 1
@@ -358,6 +380,10 @@ SUBROUTINE evolve_embryos
 
   tdump = tdump + dt
 
+  !********************************************************************
+  ! If necessary, write a snapshot of the population at this timestep
+  !********************************************************************
+
   if(tdump>tsnap) then
      isnap = isnap +1
 
@@ -375,6 +401,7 @@ SUBROUTINE evolve_embryos
      tdump = 0.0
   endif
 
+  ! If debugging, write nbody data to separate output files
   if(nbody=='y' .and.debug=='y') call nbody_output(t) ! Debug line - check nbody outputs
 
   IF(timeup==1) exit
@@ -383,6 +410,7 @@ SUBROUTINE evolve_embryos
   ! Recalculate ancillary variables
   q_disc = mdisc/mstar
   !print*, mstar/umass, mdisc/umass, q_disc
+
   DO WHILE(i < irout)
      i=i+1
      omega_d(i) = sqrt(G*mstar/(r_d(i)*r_d(i)*r_d(i)))
@@ -397,7 +425,13 @@ SUBROUTINE evolve_embryos
 
 ENDDO
 
-! Output data pertaining to all embryos
+!********************************
+! Evolution of embryos complete
+!******************************** 
+
+!
+! Print out data pertaining to all surviving embryos
+!
 
 if(debug=='y') then
    print*, 'Resulting ', nembryo, ' Objects:'
@@ -417,33 +451,13 @@ endif
 
 nsurvive = 0
 
+! Write final population
 call write_population_snapshot(ifinal,nsurvive)
-
-!!$DO j=1,nembryo
-!!$   
-!!$  IF(embryo(j)%R > 1.0 .or.embryo(j)%rcore>1.0 .or. embryo(j)%m/mearth >1.0e-3) THEN
-!!$
-!!$     nsurvive = nsurvive+1
-!!$     if(debug=='y') then
-!!$        WRITE(*,'("Run ",I5, ", Embryo ", I2,": ",7I2,7F12.4)') istar, j, embryo(j)%imelt, &
-!!$             embryo(j)%ivap,embryo(j)%idiss, embryo(j)%igrown, &
-!!$             embryo(j)%iself, embryo(j)%ijeans, embryo(j)%itidal, &
-!!$             embryo(j)%a/udist, embryo(j)%ecc, embryo(j)%inc, &
-!!$             embryo(j)%M/Mjup, embryo(j)%R/Rjup, &
-!!$             embryo(j)%mcore/mearth, embryo(j)%rcore/rearth
-!!$     endif
-!!$
-!!$     WRITE(ifinal,'(I6,7I2,1P,7E18.10)') istar, embryo(j)%imelt, embryo(j)%ivap, embryo(j)%idiss, &
-!!$          embryo(j)%igrown, embryo(j)%iself, embryo(j)%ijeans, embryo(j)%itidal,&
-!!$          embryo(j)%a/udist, embryo(j)%ecc, embryo(j)%inc, embryo(j)%m/mjup, embryo(j)%r/rjup, &
-!!$          embryo(j)%rcore/rearth, embryo(j)%mcore/mearth
-!!$  ENDIF
-!!$
-!!$ENDDO
 
 write(*,'(A,I1)') 'Number of survivors: ',nsurvive
 call flush(ifinal)
 
+! Deallocate nbody arrays ready for next run
 if(nbody=='y') call nbody_deallocate_arrays
 
 END SUBROUTINE evolve_embryos
