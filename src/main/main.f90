@@ -27,8 +27,8 @@ PROGRAM grapus
      SUBROUTINE generate_embryos
      END SUBROUTINE generate_embryos
 
-     SUBROUTINE evolve_embryos
-     END SUBROUTINE evolve_embryos
+     SUBROUTINE evolve
+     END SUBROUTINE evolve
 
      SUBROUTINE evolve_disc
      END SUBROUTINE evolve_disc
@@ -56,7 +56,7 @@ PROGRAM grapus
 
      ! Evolve these embryos towards the inner disc
      ! Subroutine outputs final M,R,a to file
-     IF(nembryo>0) CALL evolve_embryos
+     IF(nembryo>0) CALL evolve
 
   ENDDO
 

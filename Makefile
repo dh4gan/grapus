@@ -29,7 +29,7 @@ SOURCESAF90 = star_module.f90 embryo_module.f90 eosmodule.f90  main.f90 \
 	calc_grain_growth.f90 calc_grain_sedimentation.f90 \
 	calc_tidal_disruption.f90 check_embryo_thermal_state.f90 \
 	check_for_dead_embryos.f90 eosread.f90 eos_cs.f90 \
-	 evolve_disc_interpmodel.f90 evolve_radius.f90 \
+	evolve.f90  evolve_disc_interpmodel.f90 evolve_radius.f90 \
 	evolve_temperature.f90 evolve_embryos.f90 \
 	generate_disc_interpmodel.f90 generate_embryos.f90 \
 	generate_star.f90 initial.f90 \
