@@ -13,16 +13,9 @@ subroutine calc_core_formation(j,t)
 
   real :: l_jeans
 
-
-  !l_jeans = 3.0*Boltzmannk*embryo(j)%T*fg*embryo(j)%m/(4.0*pi*mu*mH*G*&
-  !     (embryo(j)%rg**3)*rho_s*rho_s)
-  !l_jeans = sqrt(l_jeans)
-
   ! Compute jeans length of grain cluster
 
-  l_jeans = embryo(j)%R*fg**0.5
-
-  !print*, 'Testing for Jeans' ,j, embryo(j)%mcore/mearth, l_jeans/udist, embryo(j)%rg/udist
+  l_jeans = embryo(j)%R*embryo(j)%fg**0.5
 
   IF(embryo(j)%rg < l_jeans .or. embryo(j)%rg < 0.0) THEN
      

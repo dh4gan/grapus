@@ -148,6 +148,7 @@ SUBROUTINE generate_embryos
 
      embryo(j)%RG = embryo(j)%R0
      embryo(j)%fg = fg
+     embryo(j)%msolids = embryo(j)%fg*embryo(j)%m
      embryo(j)%rcore = 0.0  ! No solid core formed yet
      embryo(j)%tself = 0.0
      embryo(j)%rself = 0.0
