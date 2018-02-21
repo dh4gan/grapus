@@ -48,7 +48,9 @@ type GE_embryo
 
 integer :: iform, icurrent, finished
 integer :: ivap,imelt,idiss,igrown,iself,ijeans,itidal ! Identifies current state of embryo
-real :: m, a,R,Rg,Rg0, Rcore, mcore,Nsteps ! number of steps left at an orbital radius
+integer :: migtype ! What sort of migration is embryo undergoing (Type I/II)
+real :: m, a,R,Rg,Rg0, Rcore, mcore
+real :: Nsteps ! Number of steps left at an orbital radius
 real :: R0, T0, cs0, t_cool0, t_grow0,t_sed0
 real :: T,L, t_cool, cs,rhoc, fg
 real :: t_grow, t_sed, tmig,tgap,tcross

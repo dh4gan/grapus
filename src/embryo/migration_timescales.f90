@@ -8,7 +8,7 @@ use eosdata, only: yr,udist,umass
 
 implicit none
 
-integer :: i,j,migtype
+integer :: i,j
 real :: vmig, aspectratio,massratio, r_hill, pressure_crit
 
 
@@ -56,18 +56,18 @@ do j=1,nembryo
       embryo(j)%tgap = c_gap*(aspectratio**5)/(omega_d(i)*massratio*massratio)
 
       ! Assume gap opens before testing - migration type II
-      migtype = 2
+      embryo(j)%migtype = 2
 
       ! Failure to open a gap results in type I migration
 
       ! If crossing time too short to open gap, no gap opens
-      if( embryo(j)%tcross <  embryo(j)%tgap)  migtype = 1
+      if( embryo(j)%tcross <  embryo(j)%tgap)  embryo(j)%migtype = 1
       ! If pressure criterion not met, gap doesn't open
-      if(pressure_crit>1.0) migtype = 1
+      if(pressure_crit>1.0) embryo(j)%migtype = 1
 
       ! Calculate migration timescale (depending on regime)
 
-      IF(migtype==1)THEN
+      IF(embryo(j)%migtype==1)THEN
          ! Type I - Multiply migration timescale by tunable migration parameter
          IF(sigma_d(i)>0.0) THEN
             embryo(j)%tmig = c_mig*aspectratio/(omega_d(i)*massratio)
@@ -90,7 +90,7 @@ do j=1,nembryo
       if(debug=='y') then
 
          write(*,'(A,1P,I1,X,I1,1P,6e18.4)') 'Migration timescales: ', j, &
-              migtype,  embryo(j)%a/udist,embryo(j)%m/mjup, &
+              embryo(j)%migtype,  embryo(j)%a/udist,embryo(j)%m/mjup, &
               pressure_crit,  embryo(j)%tmig/yr,  embryo(j)%tcross/yr, &
               embryo(j)%tgap/yr
       endif
