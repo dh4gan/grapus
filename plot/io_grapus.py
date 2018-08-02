@@ -152,6 +152,64 @@ def read_finaldata(finalfile):
     return finaldata, ejectadata, nbound,nejected
 
 
+def return_system(finaldata,istar):
+    '''Returns collected data for planetary system istar'''
+
+    systemdata = finaldata[finaldata[:,finalcoldict['istar']]==istar,:]
+
+    masses = systemdata[:,finalcoldict['mass']]
+    semimaj = systemdata[:,finalcoldict['a']]
+    ecc = systemdata[:,finalcoldict['e']]
+
+    colours = []
+
+    for i in range(len(systemdata[:,finalcoldict['istar']])):
+        colours.append(get_fragment_colour(systemdata,i))
+
+
+    return masses, semimaj, ecc, colours
+
+
+def aggregate_systems(finaldata, systemlist=None):
+    '''Collates mass, semimajor axis and eccentricity data by system
+
+    finaldata - output data from grapus
+    systemlist - a list of istar values, identifying systems to aggregate'''
+
+    nsystems = int(np.amax(finaldata[:,finalcoldict['istar']]))
+
+    print 'Aggregating ', nsystems, ' systems'
+
+    allmasses = []
+    allsemimaj = []
+    allecc = []
+    allcolours = []
+
+    if(systemlist==None):
+        syslist = range(nsystems)
+    else:
+        syslist = systemlist
+
+    first = True
+    for i in syslist:
+
+        masses,semimaj,ecc,colours = return_system(finaldata,i)
+
+        allmasses.append(masses)
+        allsemimaj.append(semimaj)
+        allecc.append(ecc)
+        allcolours.append(colours)
+
+    allmasses.pop(0)
+    allsemimaj.pop(0)
+    allecc.pop(0)
+
+    return allmasses,allsemimaj,allecc
+
+
+
+
+
 
 def classify_fragment(fragdata,i):
     '''Classifies a fragment into brown dwarf, gas giant or terrestrial'''

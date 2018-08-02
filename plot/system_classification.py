@@ -9,10 +9,24 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import filefinder as ff
 import numpy as np
-from io_grapus import read_finaldata,finalcoldict
+from io_grapus import read_finaldata,finalcoldict, aggregate_systems
 from sklearn.cluster import KMeans
+import sys
 
-def create_input_vector(bodies,nplanetmax):
+
+def add_variable_to_feature_vector(vector,bodies,nplanetmax,key):
+
+    nbodies = bodies.shape[0]
+
+    for i in range(nbodies):
+        vector = np.append(vector,bodies[i,finalcoldict[key]])
+    for i in range(nbodies,nplanetmax):
+        vector = np.append(vector,0.0)
+
+    return vector
+
+
+def create_input_feature_vector(bodies,nplanetmax):
     '''generates a vector of data representing a planetary system for classification'''
 
     nbodies = bodies.shape[0]
@@ -25,19 +39,11 @@ def create_input_vector(bodies,nplanetmax):
     max_semimaj = np.amax(bodies[:,finalcoldict['a']])
     max_mass = np.amax(bodies[:,finalcoldict['mass']])
 
-    for i in range(nbodies):
-        vector=np.append(vector,bodies[i,finalcoldict['a']])
+    # Add semimajor axis, mass and eccentricity to feature vector
 
-            
-        
-    for i in range(nbodies,nplanetmax):
-        vector=np.append(vector,0.0)
-
-    for i in range(nbodies):
-        vector=np.append(vector,bodies[i,finalcoldict['mass']])
-
-    for i in range(nbodies,nplanetmax):
-        vector = np.append(vector,0)
+    vector = add_variable_to_feature_vector(vector,bodies,nplanetmax,'a')
+    vector = add_variable_to_feature_vector(vector,bodies,nplanetmax,'mass')
+    vector = add_variable_to_feature_vector(vector,bodies,nplanetmax,'e')
     
     return vector, max_semimaj, max_mass
 
@@ -66,14 +72,11 @@ minmarkersize = 50
 amin = 0.1
 amax=1.0e5
 
-nfinalcol = 15
 istarcol = finalcoldict['istar']
 mcol = finalcoldict['mass']
 acol = finalcoldict['a']
 
 # Use filefinder to find files
-
-
 
 finalfile = ff.find_sorted_local_input_files('*.final')
 
@@ -97,12 +100,16 @@ print 'Building feature vectors for ',nsystems, ' systems'
 
 systems = []
 
+systemlist = range(10)
+allmasses,allsemimaj,allecc = aggregate_systems(finaldata,systemlist)
+
+print systemlist, allmasses
+
+
 for isystem in range(1,nsystems):
     
     # Select planetary bodies
     bodies = finaldata[finaldata[:,istarcol]==isystem,:]
-
-
 
     #print output[:,mcorecol]*0.003146/output[:,mcol]
     nplanets = bodies.shape[0]    
@@ -118,7 +125,7 @@ for isystem in range(1,nsystems):
     print 'SYSTEMS'
     print systems
     # Generate vector for this system
-    output, max_a,max_m = create_input_vector(bodies,nplanetmax)
+    output, max_a,max_m = create_input_feature_vector(bodies,nplanetmax)
 
     #print isystem,output
 
@@ -179,9 +186,7 @@ for k in kvalues:
     colorlist = []
     for i in range(nvectors):    
         colorlist.append(colors[kmeans.labels_[i]])
-
-    
-
+        
     #ax1.scatter(X[:,0], kmeans.labels_, label='k='+str(k))
     ax1.scatter(max_semimaj, max_mass,color=colorlist)
 
