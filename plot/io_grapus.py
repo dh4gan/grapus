@@ -208,9 +208,6 @@ def aggregate_systems(finaldata, systemlist=None):
 
 
 
-
-
-
 def classify_fragment(fragdata,i):
     '''Classifies a fragment into brown dwarf, gas giant or terrestrial'''
     # Convert data into binary code

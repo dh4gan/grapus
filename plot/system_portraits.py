@@ -18,9 +18,7 @@ print '\t \t \t ------------------------'
 print ''
 
 
-
-
-nsystems = 50 # Number of systems to plot
+nsystems = 100 # Number of systems to plot
 ntrymax = 100000 # Number of samplings to try
 systemspacing = 1000
 patchwidth = 0.7*systemspacing
@@ -32,10 +30,8 @@ plt.rcParams['patch.linewidth'] = 2
 plt.rc('xtick', labelsize=14*np.int(nsystems)/10)
 plt.rc('ytick', labelsize=14*np.int(nsystems)/10)
 
-
-
-markerscale = 3
-minmarkersize = 50
+markerscale = 3*nsystems/10
+minmarkersize = 50*nsystems/10
 amin = 0.1
 amax=1.0e5
 
@@ -51,8 +47,6 @@ imax = int(np.amax(finaldata[:,finalcoldict['istar']]))
 
 print 'Have ', imax, ' systems to choose from for portraits'
 
-
-
 fig1 = plt.figure(figsize=(figheight,figwidth))
 ax1 = fig1.add_subplot(111)
 
@@ -65,11 +59,14 @@ allypositions = []
 allsizes = []
 allcolors = []
 
+minsemimaj=[]
+
 ntries = 0
+iselect = 0
 while isystem < nsystems:
 
-    iselect = np.random.randint(0,high=imax)
-    
+    #iselect = np.random.randint(0,high=imax)
+    iselect = iselect+1
     ntries = ntries+1
     if(ntries>ntrymax): break
     # Find first instance of iselect
@@ -77,12 +74,15 @@ while isystem < nsystems:
     output = finaldata[finaldata[:,finalcoldict['istar']]==iselect,:]
 
     nplanets = output.shape[0]
+    
+    # Skip empty systems
     if nplanets<1: continue
+
+    # Track minimum semimajor axis for sorting plots
     
-    # Only plot systems with more than 3 bodies at a<10 AU
-    
-    #if(nplanets<2 or np.amin(output[:,finalcoldict['a']])>10.0): continue
-    
+    minsemimaj.append(np.amin(output[:,finalcoldict['a']]))
+
+
     
     # Check system hasn't been picked before
     if iselect in iselected: continue
@@ -92,11 +92,6 @@ while isystem < nsystems:
     allsystems.append(output)
     
     isystem = isystem+1
-
-    yposition = np.zeros(nplanets)
-    yposition[:]=isystem*systemspacing
-    
-    allypositions.append(yposition)
 
     # Marker sizes
     sizes = markerscale*output[:,finalcoldict['mass']]
@@ -114,21 +109,49 @@ while isystem < nsystems:
     
     allcolors.append(colors)
 
-print allypositions
-for iselect in range(nsystems):
-    
-    ax1.add_patch(patches.Rectangle( (amin,allypositions[iselect][0]-0.5*patchwidth), amax, patchwidth, color='gray', alpha=0.2))
-    
-    ax1.scatter(allsystems[iselect][:,finalcoldict['a']],allypositions[iselect][:],s=allsizes[iselect][:], color=allcolors[iselect][:])
+# Now sort arrays in order of ascending minimum semimajor axis
 
-    ax1.errorbar(allsystems[iselect][:,finalcoldict['a']], allypositions[iselect], xerr = allsystems[iselect][:,finalcoldict['a']]*allsystems[iselect][:,finalcoldict['e']], linestyle='None', color='black')
+neworder = np.flip(np.argsort(minsemimaj))
+print neworder
+
+print [minsemimaj[i] for i in neworder]
+
+#print [allsystems[i][:,finalcoldict['a']] for i in range(nsystems)]
+#allsystems.sort(key=lambda x: x[finalcoldict['a']])
+#print [allsystems[i][:,finalcoldict['a']] for i in range(nsystems)]
+
+
+#allsystems = [allsystems[i] for i in neworder]
+#allypositions = [allypositions[i] for i in neworder]
+#allsizes = [allsizes[i] for i in neworder]
+#allcolors = [allcolors[i] for i in neworder]
+
+
+for j in range(nsystems):
+    
+    
+    i = neworder[j]
+    nplanets = len(allsystems[i][:,finalcoldict['a']])
+    #i=j
+    
+    # Generate y positions for each system
+    ypositions = np.zeros(nplanets)
+    ypositions[:] = j*systemspacing
+    
+    print i, nplanets, ypositions[0], allsystems[i][:,finalcoldict['a']], minsemimaj[i]
+    
+    ax1.add_patch(patches.Rectangle( (amin,ypositions[0]-0.5*patchwidth), amax, patchwidth, color='gray', alpha=0.2))
+    
+    ax1.scatter(allsystems[i][:,finalcoldict['a']],ypositions[:],s=allsizes[i][:], color=allcolors[i][:])
+
+    ax1.errorbar(allsystems[i][:,finalcoldict['a']], ypositions[:], xerr = allsystems[i][:,finalcoldict['a']]*allsystems[i][:,finalcoldict['e']], linestyle='None', color='black')
     
 
 ax1.set_xlim(1.0e-1,amax)
 ax1.set_xscale('log')
-ax1.set_ylim(0,yposition[0]+patchwidth)
+#ax1.set_ylim(0,ypositions[0]+patchwidth)
 ax1.set_xlabel('a (AU)')
 ax1.get_yaxis().set_ticks([])
-plt.show()
+#plt.show()
 fig1.savefig('portrait.png')
 
