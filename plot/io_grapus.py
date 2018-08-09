@@ -235,7 +235,7 @@ def classify_fragment(fragdata,i):
         # Is this gas giant or terrestrial planet? determine by mcore/membryo
         mratio = fragdata[i,finalcoldict['mcore']]*mearth_in_mjup/fragdata[i,finalcoldict['mass']]
          
-        print mratio, fragdata[i,finalcoldict['mcore']], fragdata[i,finalcoldict['mass']]
+         #print mratio, fragdata[i,finalcoldict['mcore']], fragdata[i,finalcoldict['mass']]
         if(mratio < 0.5):
             fragmentclass = 'giant, rocky core'
         else:
